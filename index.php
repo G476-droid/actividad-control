@@ -9,12 +9,10 @@
 </head>
 <body class="container py-5">
   <div class="row align-items-center" style="min-height: 60vh;">
-    <!-- Logo a la izquierda, centrado verticalmente -->
     <div class="col-md-6 d-flex justify-content-center align-items-center">
       <img src="logo.jpeg" alt="Logo de la Empresa" class="logo-img">
     </div>
 
-    <!-- Formulario a la derecha -->
     <div class="col-md-6 text-center text-md-start">
       <h2 class="mb-4">Selecciona una persona</h2>
       <form action="actividades.php" method="GET" class="w-75 mx-auto">
@@ -22,14 +20,13 @@
           <option value="">-- Selecciona --</option>
           <?php
           $result = pg_query($conn, "SELECT * FROM personas");
-
-if ($result) {
-  while ($row = pg_fetch_assoc($result)) {
-    echo "<option value='{$row['id']}'>{$row['nombre']}</option>";
-  }
-} else {
-  echo "<option>Error al cargar personas</option>";
-}
+          if ($result) {
+            while ($row = pg_fetch_assoc($result)) {
+              echo "<option value='{$row['id']}'>{$row['nombre']}</option>";
+            }
+          } else {
+            echo "<option>Error al cargar personas</option>";
+          }
           ?>
         </select>
         <button class="btn btn-primary">Ver Actividades</button>
@@ -38,5 +35,6 @@ if ($result) {
   </div>
 </body>
 </html>
+
 
 
