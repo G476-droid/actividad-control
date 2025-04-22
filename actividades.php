@@ -1,8 +1,12 @@
 <?php
 include "db.php";
 
-$persona_id = $_GET['persona_id'];
-if (!$persona_id) header("Location: index.php");
+// Validar persona_id
+if (!isset($_GET['persona_id']) || !is_numeric($_GET['persona_id'])) {
+    header("Location: index.php");
+    exit;
+}
+$persona_id = (int) $_GET['persona_id'];
 
 require "mover_incompletas.php";
 
