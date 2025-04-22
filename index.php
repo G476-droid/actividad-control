@@ -21,10 +21,15 @@
         <select name="persona_id" class="form-select mb-3" required>
           <option value="">-- Selecciona --</option>
           <?php
-          $res = $conn->query("SELECT * FROM personas");
-          while ($row = $res->fetch_assoc()) {
-            echo "<option value='{$row['id']}'>{$row['nombre']}</option>";
-          }
+          $result = pg_query($conn, "SELECT * FROM personas");
+
+if ($result) {
+  while ($row = pg_fetch_assoc($result)) {
+    echo "<option value='{$row['id']}'>{$row['nombre']}</option>";
+  }
+} else {
+  echo "<option>Error al cargar personas</option>";
+}
           ?>
         </select>
         <button class="btn btn-primary">Ver Actividades</button>
