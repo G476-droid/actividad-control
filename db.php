@@ -1,12 +1,13 @@
 <?php
-$host = "localhost";
-$user = "root";
-$pass = "";
-$db = "actividadesmyv20251_db";
+$host = "dpg-d03gkjadbo4c738camp0-a";
+$user = "actividadesmyv20251_db";
+$pass = "7VovdXaqf7hoID2n6CkBrxgLx9rEmaoJ";
+$db = "actividadesmyv20251_db_6phh";
+$port = "5432";
 
-$conn = new mysqli($host, $user, $pass, $db);
+$conn = pg_connect("host=$host port=$port db=$db user=$user pass=$pass");
 
-if ($conn->connect_error) {
-    die("Conexión fallida: " . $conn->connect_error);
+if (!$conn) {
+    die("Error de conexión: " . pg_last_error());
 }
 ?>
