@@ -13,10 +13,14 @@ if ($_POST) {
   $query = "INSERT INTO actividades (persona_id, titulo, descripcion, fecha, prioridad) 
             VALUES ($1, $2, $3, $4, $5)";
   $params = array($persona_id, $titulo, $descripcion, $fecha, $prioridad);
-  pg_query_params($conn, $query, $params);
+  $result = pg_query_params($conn, $query, $params);
 
-  header("Location: actividades.php?persona_id=$persona_id");
-  exit;
+  if ($result) {
+    header("Location: actividades.php?persona_id=$persona_id");
+    exit;
+  } else {
+    echo "<div class='alert alert-danger'>Error al insertar la actividad.</div>";
+  }
 }
 ?>
 <!DOCTYPE html>
