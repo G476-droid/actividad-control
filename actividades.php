@@ -17,7 +17,7 @@ $persona_sql = pg_query($conn, "SELECT nombre FROM personas WHERE id = $persona_
 $persona = pg_fetch_assoc($persona_sql);
 
 // Obtener actividades
-$actividades_sql = pg_query($conn, "SELECT * FROM actividades WHERE persona_id = $persona_id ORDER BY 
+$actividades_sql = pg_query($conn, "SELECT * FROM actividades WHERE persona_id = $persona_id AND borrado = FALSE ORDER BY 
   CASE prioridad 
     WHEN 'alta' THEN 1 
     WHEN 'media' THEN 2 
