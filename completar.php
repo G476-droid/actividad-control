@@ -1,8 +1,22 @@
 <?php
 include "db.php";
 
-$id = $_GET['id'];
-$persona_id = $_GET['persona_id'];
+// Forzar a entero para securizar
+$id = isset($_GET['id']) ? (int) $_GET['id'] : 0;
+$persona_id = isset($_GET['persona_id']) ? (int) $_GET['persona_id'] : 0;
 
-$conn->query("UPDATE actividades SET completada = 1 WHERE id = $id");
-header("Location: actividades.php?persona_id=$persona_id");
+// Ejecutar el UPDATE con parámetro
+$result = pg_query_params(
+    $conn,
+    "UPDATE actividades SET completada = TRUE WHERE id = $1",
+    array($id)
+);
+
+if (!$result) {
+    die("Error al marcar la actividad como completada: " . pg_last_error($conn));
+}
+
+// Redirigir de vuelta a la lista de actividades
+header("Location: actividades.php?persona_id=" . $persona_id);
+exit;
+?>
