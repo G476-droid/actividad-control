@@ -1,7 +1,7 @@
-<?php
+<?php 
 include "db.php";
 
-$persona_id = $_GET['persona_id'];
+$persona_id = (int) $_GET['persona_id']; // seguridad: forzamos entero
 
 if ($_POST) {
   $titulo = $_POST['titulo'];
@@ -9,9 +9,14 @@ if ($_POST) {
   $fecha = $_POST['fecha'];
   $prioridad = $_POST['prioridad'];
 
-  $conn->query("INSERT INTO actividades (persona_id, titulo, descripcion, fecha, prioridad) 
-                VALUES ($persona_id, '$titulo', '$descripcion', '$fecha', '$prioridad')");
+  // Usamos pg_query_params para evitar SQL injection
+  $query = "INSERT INTO actividades (persona_id, titulo, descripcion, fecha, prioridad) 
+            VALUES ($1, $2, $3, $4, $5)";
+  $params = array($persona_id, $titulo, $descripcion, $fecha, $prioridad);
+  pg_query_params($conn, $query, $params);
+
   header("Location: actividades.php?persona_id=$persona_id");
+  exit;
 }
 ?>
 <!DOCTYPE html>
