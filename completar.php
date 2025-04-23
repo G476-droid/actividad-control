@@ -1,11 +1,11 @@
 <?php
 include "db.php";
 
-// Forzar a entero para securizar
+// Validar y castear parámetros
 $id = isset($_GET['id']) ? (int) $_GET['id'] : 0;
 $persona_id = isset($_GET['persona_id']) ? (int) $_GET['persona_id'] : 0;
 
-// Ejecutar el UPDATE con parámetro
+// Ejecutar el UPDATE usando pg_query_params
 $result = pg_query_params(
     $conn,
     "UPDATE actividades SET completada = TRUE WHERE id = $1",
