@@ -1,18 +1,41 @@
 <?php
 include "db.php";
-$id = $_GET['id'];
-$persona_id = $_GET['persona_id'];
+
+// Validar y castear parámetros
+$id = isset($_GET['id']) ? (int) $_GET['id'] : 0;
+$persona_id = isset($_GET['persona_id']) ? (int) $_GET['persona_id'] : 0;
 
 if ($_POST) {
   $titulo = $_POST['titulo'];
   $descripcion = $_POST['descripcion'];
   $fecha = $_POST['fecha'];
   $prioridad = $_POST['prioridad'];
-  $conn->query("UPDATE actividades SET titulo='$titulo', descripcion='$descripcion', fecha='$fecha', prioridad='$prioridad' WHERE id = $id");
-  header("Location: actividades.php?persona_id=$persona_id");
+
+  // Usamos pg_query_params para evitar SQL injection
+  $query = "UPDATE actividades SET titulo = $1, descripcion = $2, fecha = $3, prioridad = $4 WHERE id = $5";
+  $params = array($titulo, $descripcion, $fecha, $prioridad, $id);
+
+  $result = pg_query_params($conn, $query, $params);
+
+  if (!$result) {
+    die("Error al actualizar la actividad: " . pg_last_error($conn));
+  }
+
+  // Redirigir de vuelta a la lista de actividades
+  header("Location: actividades.php?persona_id=" . $persona_id);
+  exit;
 }
 
-$act = $conn->query("SELECT * FROM actividades WHERE id = $id")->fetch_assoc();
+// Obtener la actividad a editar usando pg_query_params
+$query = "SELECT * FROM actividades WHERE id = $1";
+$params = array($id);
+$act_result = pg_query_params($conn, $query, $params);
+
+if (!$act_result) {
+    die("Error al obtener la actividad: " . pg_last_error($conn));
+}
+
+$act = pg_fetch_assoc($act_result);
 ?>
 <!DOCTYPE html>
 <html lang="es">
@@ -24,9 +47,9 @@ $act = $conn->query("SELECT * FROM actividades WHERE id = $id")->fetch_assoc();
 <body class="container py-4">
   <h2>Editar Actividad</h2>
   <form method="POST">
-    <input name="titulo" value="<?= $act['titulo'] ?>" class="form-control mb-2" required>
-    <textarea name="descripcion" class="form-control mb-2"><?= $act['descripcion'] ?></textarea>
-    <input name="fecha" type="date" value="<?= $act['fecha'] ?>" class="form-control mb-2" required>
+    <input name="titulo" value="<?= htmlspecialchars($act['titulo']) ?>" class="form-control mb-2" required>
+    <textarea name="descripcion" class="form-control mb-2"><?= htmlspecialchars($act['descripcion']) ?></textarea>
+    <input name="fecha" type="date" value="<?= htmlspecialchars($act['fecha']) ?>" class="form-control mb-2" required>
     <select name="prioridad" class="form-select mb-2">
       <option value="alta" <?= $act['prioridad'] == 'alta' ? 'selected' : '' ?>>Alta</option>
       <option value="media" <?= $act['prioridad'] == 'media' ? 'selected' : '' ?>>Media</option>
