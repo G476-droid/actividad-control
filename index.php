@@ -53,7 +53,7 @@ if ($_POST) {
           }
           ?>
         </select>
-        <input name="clave" type="password" class="form-control mb-3" placeholder="Clave" required>
+        <input name="clave" type="password" class="form-control mb-3" placeholder="Password" required>
         <button class="btn btn-primary">Ingresar</button>
       </form>
     </div>
