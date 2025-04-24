@@ -6,7 +6,7 @@ ini_set('display_errors', 1);
 
 // Redirigir si no está logueado
 if (!isset($_SESSION['persona_id'])) {
-  header("Location: login.php");
+  header("Location: index.php");
   exit;
 }
 
