@@ -72,7 +72,11 @@ if ($es_admin) {
     <td><?= ucfirst($row['prioridad']) ?></td>
     <td><?= $row['completada'] === 't' ? '✅' : '❌' ?></td>
     <td>
-      <!-- acciones -->
+  <?php if (!$row['completada']): ?>
+            <a href="completar.php?id=<?= $row['id'] ?>&persona_id=<?= $persona_id ?>" class="btn btn-sm btn-primary">Marcar hecha</a>
+          <?php endif; ?>
+          <a href="editar_actividad.php?id=<?= $row['id'] ?>&persona_id=<?= $persona_id ?>" class="btn btn-sm btn-info">Editar</a>
+          <a href="eliminar.php?id=<?= $row['id'] ?>&persona_id=<?= $persona_id ?>" class="btn btn-sm btn-danger" onclick="return confirm('¿Estás seguro de eliminar esta actividad?')">Eliminar</a>
     </td>
   </tr>
   <?php endwhile; ?>
