@@ -72,7 +72,7 @@ if ($es_admin) {
     <td><?= $row['completada'] === 't' ? '✅' : '❌' ?></td>
     <td>
 
-          <?php if ($row['completada'] ): ?>
+          <?php if ($row['completada']=== 'f' ): ?>
             <a href="completar.php?id=<?= $row['id'] ?>" class="btn btn-sm btn-primary mb-1">Marcar hecha</a>
   <?php endif; ?>
 
