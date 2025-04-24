@@ -7,11 +7,11 @@ ini_set('display_errors', 1);
 $mensaje = '';
 
 if ($_POST) {
-  $nombre = $_POST['nombre'];
+  $persona_id = $_POST['persona_id'];
   $clave = $_POST['clave'];
 
-  $sql = "SELECT * FROM personas WHERE nombre = $1 AND clave = $2";
-  $params = array($nombre, $clave);
+  $sql = "SELECT * FROM personas WHERE id = $1 AND clave = $2";
+  $params = array($persona_id, $clave);
   $res = pg_query_params($conn, $sql, $params);
 
   if ($persona = pg_fetch_assoc($res)) {
@@ -20,7 +20,7 @@ if ($_POST) {
     header("Location: actividades.php");
     exit;
   } else {
-    $mensaje = "Nombre o clave incorrectos.";
+    $mensaje = "Clave incorrecta.";
   }
 }
 ?>
@@ -44,7 +44,15 @@ if ($_POST) {
         <div class="alert alert-danger"><?= htmlspecialchars($mensaje) ?></div>
       <?php endif; ?>
       <form method="POST" class="w-75 mx-auto">
-        <input name="nombre" class="form-control mb-3" placeholder="Nombre" required>
+        <select name="persona_id" class="form-select mb-3" required>
+          <option value="">-- Selecciona tu nombre --</option>
+          <?php
+          $res = pg_query($conn, "SELECT id, nombre FROM personas ORDER BY nombre");
+          while ($row = pg_fetch_assoc($res)) {
+            echo "<option value='{$row['id']}'>{$row['nombre']}</option>";
+          }
+          ?>
+        </select>
         <input name="clave" type="password" class="form-control mb-3" placeholder="Clave" required>
         <button class="btn btn-primary">Ingresar</button>
       </form>
