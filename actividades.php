@@ -18,24 +18,31 @@ require "mover_incompletas.php";
 
 if ($es_admin) {
   $persona = ['nombre' => 'Administrador'];
-  $actividades_sql = pg_query($conn, "SELECT actividades.*, personas.nombre AS nombre_persona FROM actividades JOIN personas ON personas.id = actividades.persona_id WHERE borrado = FALSE ORDER BY 
-    CASE prioridad 
-      WHEN 'alta' THEN 1 
-      WHEN 'media' THEN 2 
-      WHEN 'baja' THEN 3 
-      ELSE 4 
-    END, fecha ASC");
+  $actividades_sql = pg_query($conn, "SELECT actividades.*, personas.nombre AS nombre_persona 
+    FROM actividades 
+    JOIN personas ON personas.id = actividades.persona_id 
+    WHERE borrado = FALSE AND completada = FALSE
+    ORDER BY 
+      CASE prioridad 
+        WHEN 'alta' THEN 1 
+        WHEN 'media' THEN 2 
+        WHEN 'baja' THEN 3 
+        ELSE 4 
+      END, fecha ASC");
 } else {
   $persona_sql = pg_query_params($conn, "SELECT nombre FROM personas WHERE id = $1", array($persona_id));
   $persona = pg_fetch_assoc($persona_sql);
-  $actividades_sql = pg_query_params($conn, "SELECT * FROM actividades WHERE persona_id = $1 AND borrado = FALSE ORDER BY 
-    CASE prioridad 
-      WHEN 'alta' THEN 1 
-      WHEN 'media' THEN 2 
-      WHEN 'baja' THEN 3 
-      ELSE 4 
+  $actividades_sql = pg_query_params($conn, "SELECT * FROM actividades 
+    WHERE persona_id = $1 AND borrado = FALSE AND completada = FALSE
+    ORDER BY 
+      CASE prioridad 
+        WHEN 'alta' THEN 1 
+        WHEN 'media' THEN 2 
+        WHEN 'baja' THEN 3 
+        ELSE 4 
     END, fecha ASC", array($persona_id));
 }
+
 ?>
 <!DOCTYPE html>
 <html lang="es">
