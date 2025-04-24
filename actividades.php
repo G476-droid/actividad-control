@@ -47,7 +47,6 @@ if ($es_admin) {
 </head>
 <body class="container py-4">
   <h2>Actividades de <?= htmlspecialchars($persona['nombre']) ?></h2>
- <!-- <a href="index.php" class="btn btn-sm btn-secondary mb-3">Cambiar Persona</a>-->
   <a href="nueva_actividad.php?persona_id=<?= $persona_id ?>" class="btn btn-sm btn-success mb-3">+ Nueva Actividad</a>
   <a href="logout.php" class="btn btn-sm btn-outline-danger float-end">Cerrar sesión</a>
   <table class="table table-bordered">
@@ -73,8 +72,9 @@ if ($es_admin) {
     <td><?= $row['completada'] === 't' ? '✅' : '❌' ?></td>
     <td>
 
+          <?php if (!$row['completada']): ?>
             <a href="completar.php?id=<?= $row['id'] ?>&persona_id=<?= $persona_id ?>" class="btn btn-sm btn-primary">Marcar hecha</a>
-        
+          <?php endif; ?>
           <a href="editar_actividad.php?id=<?= $row['id'] ?>&persona_id=<?= $persona_id ?>" class="btn btn-sm btn-info">Editar</a>
           <a href="eliminar.php?id=<?= $row['id'] ?>&persona_id=<?= $persona_id ?>" class="btn btn-sm btn-danger" onclick="return confirm('¿Estás seguro de eliminar esta actividad?')">Eliminar</a>
     </td>
