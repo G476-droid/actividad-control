@@ -69,7 +69,7 @@ if ($es_admin) {
     <td><?= htmlspecialchars($row['descripcion']) ?></td>
     <td><?= htmlspecialchars($row['fecha']) ?></td>
     <td><?= ucfirst($row['prioridad']) ?></td>
-    <td><?= $row['completada'] === 't' ? '✅' : '' ?></td>
+    <td><?= $row['completada'] === 't' ? '✅' : '❌' ?></td>
     <td>
 
           <?php if ($row['completada'] !== true): ?>
