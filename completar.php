@@ -1,11 +1,24 @@
 <?php
+session_start();
 include "db.php";
+error_reporting(E_ALL);
+ini_set('display_errors', 1);
 
-// Validar y castear parámetros
+// Validar que el usuario esté logueado
+if (!isset($_SESSION['persona_id'])) {
+    header("Location: login.php");
+    exit;
+}
+
+// Validar y limpiar parámetros
 $id = isset($_GET['id']) ? (int) $_GET['id'] : 0;
-$persona_id = isset($_GET['persona_id']) ? (int) $_GET['persona_id'] : 0;
+$persona_id = $_SESSION['persona_id']; // Se toma de la sesión, no por GET
 
-// Ejecutar el UPDATE usando pg_query_params
+if ($id <= 0) {
+    die("ID inválido.");
+}
+
+// Marcar como completada
 $result = pg_query_params(
     $conn,
     "UPDATE actividades SET completada = TRUE WHERE id = $1",
@@ -16,7 +29,8 @@ if (!$result) {
     die("Error al marcar la actividad como completada: " . pg_last_error($conn));
 }
 
-// Redirigir de vuelta a la lista de actividades
-header("Location: actividades.php?persona_id=" . $persona_id);
+// Redirigir a actividades
+header("Location: actividades.php");
 exit;
 ?>
+
