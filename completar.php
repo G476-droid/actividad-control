@@ -6,7 +6,7 @@ ini_set('display_errors', 1);
 
 // Validar que el usuario esté logueado
 if (!isset($_SESSION['persona_id'])) {
-    header("Location: login.php");
+    header("Location: index.php");
     exit;
 }
 
@@ -21,7 +21,7 @@ if ($id <= 0) {
 // Marcar como completada
 $result = pg_query_params(
     $conn,
-    "UPDATE actividades SET completada = TRUE WHERE id = $1",
+    "UPDATE actividades SET completada = TRUE WHERE id = id",
     array($id)
 );
 
