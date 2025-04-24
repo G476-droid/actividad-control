@@ -72,12 +72,12 @@ if ($es_admin) {
     <td><?= $row['completada'] === 't' ? '✅' : '❌' ?></td>
     <td>
 
-          <?php if ($row['completada']=== 'f' ): ?>
-            <a href="completar.php?id=<?= $row['id'] ?>" class="btn btn-sm btn-primary mb-1">Marcar hecha</a>
+         <?php if ($row['completada'] === 'f'): ?>
+    <a href="completar.php?id=<?= $row['id'] ?>" class="btn btn-sm btn-primary mb-1">Marcar hecha</a>
+    <a href="editar_actividad.php?id=<?= $row['id'] ?>&persona_id=<?= $persona_id ?>" class="btn btn-sm btn-info">Editar</a>
+    <a href="eliminar.php?id=<?= $row['id'] ?>&persona_id=<?= $persona_id ?>" class="btn btn-sm btn-danger" onclick="return confirm('¿Estás seguro de eliminar esta actividad?')">Eliminar</a>
   <?php endif; ?>
 
-          <a href="editar_actividad.php?id=<?= $row['id'] ?>&persona_id=<?= $persona_id ?>" class="btn btn-sm btn-info">Editar</a>
-          <a href="eliminar.php?id=<?= $row['id'] ?>&persona_id=<?= $persona_id ?>" class="btn btn-sm btn-danger" onclick="return confirm('¿Estás seguro de eliminar esta actividad?')">Eliminar</a>
     </td>
   </tr>
   <?php endwhile; ?>
