@@ -21,7 +21,7 @@ if ($id <= 0) {
 // Marcar como completada
 $result = pg_query_params(
     $conn,
-    "UPDATE actividades SET completada = TRUE WHERE id = id",
+    "UPDATE actividades SET completada = TRUE WHERE id = $1",
     array($id)
 );
 
