@@ -69,10 +69,10 @@ if ($es_admin) {
     <td><?= htmlspecialchars($row['descripcion']) ?></td>
     <td><?= htmlspecialchars($row['fecha']) ?></td>
     <td><?= ucfirst($row['prioridad']) ?></td>
-    <td><?= $row['completada'] === 't' ? '✅' : '❌' ?></td>
+    <td><?= $row['completada'] === 't' ? '✅' : '' ?></td>
     <td>
 
-          <?php if (!$row['completada']): ?>
+          <?php if ($row['completada'] !== true): ?>
             <a href="completar.php?id=<?= $row['id'] ?>&persona_id=<?= $persona_id ?>" class="btn btn-sm btn-primary">Marcar hecha</a>
           <?php endif; ?>
           <a href="editar_actividad.php?id=<?= $row['id'] ?>&persona_id=<?= $persona_id ?>" class="btn btn-sm btn-info">Editar</a>
