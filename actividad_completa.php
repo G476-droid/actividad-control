@@ -64,7 +64,6 @@ if ($es_admin) {
     <th>Fecha</th>
     <th>Prioridad</th>
     <th>Completada</th>
-    <th>Acciones</th>
   </tr>
 </thead>
 <tbody>
@@ -76,7 +75,6 @@ if ($es_admin) {
   <td><?= htmlspecialchars($row['fecha']) ?></td>
   <td><?= ucfirst($row['prioridad']) ?></td>
   <td>✅</td>
-  <td> <!-- Sin botones porque ya está completada --> </td>
 </tr>
 <?php endwhile; ?>
 </tbody>
