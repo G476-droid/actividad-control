@@ -4,11 +4,11 @@ include "db.php";
 error_reporting(E_ALL);
 ini_set('display_errors', 1);
 
+// Verificar que el usuario sea administrador
 if (!isset($_SESSION['persona_id']) || empty($_SESSION['es_admin']) || $_SESSION['es_admin'] !== true) {
     header("Location: index.php"); // Redirigir si no es admin
     exit;
 }
-
 ?>
 <!DOCTYPE html>
 <html lang="es">
@@ -21,34 +21,55 @@ if (!isset($_SESSION['persona_id']) || empty($_SESSION['es_admin']) || $_SESSION
       background-color: #f8f9fa;
     }
     .menu-container {
-      height: 100vh;
+      padding-top: 80px;
+    }
+    .menu-grid {
       display: flex;
-      flex-direction: column;
+      flex-wrap: wrap;
       justify-content: center;
-      align-items: center;
+      gap: 20px;
     }
     .menu-button {
-      width: 300px;
-      margin: 15px 0;
-      font-size: 1.5rem;
-      padding: 20px;
-      border-radius: 15px;
+      width: 220px;
+      height: 150px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      text-align: center;
+      font-size: 1.3rem;
       font-weight: bold;
+      border-radius: 15px;
+      background-color: #0d6efd; /* azul bootstrap */
+      color: white;
+      text-decoration: none;
+      transition: background-color 0.3s ease;
+    }
+    .menu-button:hover {
+      background-color: #084298; /* azul más oscuro */
+    }
+    .logout-btn {
+      margin-top: 40px;
+      display: flex;
+      justify-content: center;
     }
   </style>
 </head>
 <body>
 
-<div class="menu-container">
-  <h1 class="mb-5">Menú Principal</h1>
+<div class="container menu-container text-center">
+  <h1 class="mb-5">Menú Principal - Administrador</h1>
 
-  <a href="administracion.php" class="btn btn-primary menu-button">Administración</a>
-  <a href="actividades.php" class="btn btn-success menu-button">Actividades</a>
-  <a href="taller.php" class="btn btn-warning menu-button">Taller</a>
-  <a href="novopan.php" class="btn btn-info menu-button">Novopan</a>
-  <a href="grupo_euro.php" class="btn btn-danger menu-button">Grupo Euro</a>
+  <div class="menu-grid">
+    <a href="administracion.php" class="menu-button">Administración</a>
+    <a href="actividades.php" class="menu-button">Actividades</a>
+    <a href="taller.php" class="menu-button">Taller</a>
+    <a href="novopan.php" class="menu-button">Novopan</a>
+    <a href="grupo_euro.php" class="menu-button">Grupo Euro</a>
+  </div>
 
-  <a href="logout.php" class="btn btn-secondary mt-4">Cerrar Sesión</a>
+  <div class="logout-btn">
+    <a href="logout.php" class="btn btn-danger btn-lg mt-5">Cerrar Sesión</a>
+  </div>
 </div>
 
 </body>
