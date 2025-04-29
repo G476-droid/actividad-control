@@ -55,6 +55,7 @@ if ($es_admin) {
 <body class="container py-4">
   <h2>Actividades de <?= htmlspecialchars($persona['nombre']) ?></h2>
   <a href="nueva_actividad.php?persona_id=<?= $persona_id ?>" class="btn btn-sm btn-success mb-3">+ Nueva Actividad</a>
+  <a href="nueva_actividad.php?persona_id=<?= $persona_id ?>" class="btn btn-sm btn-success mb-3">Atividades Completadas</a>
   <a href="logout.php" class="btn btn-sm btn-outline-danger float-end">Cerrar sesión</a>
   <table class="table table-bordered">
    <thead>
