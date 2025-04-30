@@ -40,7 +40,7 @@ $result = pg_query_params($conn, $sql, $params);
   </thead>
   <tbody>
     <?php $total = 0; ?>
-    <?php while ($row = $result->fetch_assoc()): ?>
+    <?php while ($row = pg_fetch_assoc($result)):  ?>
       <tr>
         <td><?= htmlspecialchars($row['codigo']) ?></td>
         <td><?= htmlspecialchars($row['producto']) ?></td>
