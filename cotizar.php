@@ -47,9 +47,9 @@ $result = $stmt->get_result();
         <td><?= htmlspecialchars($row['codigo']) ?></td>
         <td><?= htmlspecialchars($row['producto']) ?></td>
         <td><?= htmlspecialchars($row['descripcion']) ?></td>
-        <td>$<?= number_format($row['precio'], 2) ?></td>
+        <td>$<?= number_format($row['precio_usd'], 2) ?></td>
       </tr>
-      <?php $total += $row['precio']; ?>
+      <?php $total += $row['precio_usd']; ?>
     <?php endwhile; ?>
   </tbody>
   <tfoot>
