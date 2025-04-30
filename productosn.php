@@ -22,8 +22,7 @@ else
     $result = pg_query($conn, $sql);
                                                               
 }
-$stmt->execute();
-$result = $stmt->get_result();
+
 ?>
 
 <!DOCTYPE html>
