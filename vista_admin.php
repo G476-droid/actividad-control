@@ -78,7 +78,7 @@ if (!isset($_SESSION['persona_id']) || empty($_SESSION['es_admin']) || $_SESSION
       <i class="bi bi-tools"></i>
       Taller
     </a>
-    <a href="productosn" class="menu-button">
+    <a href="productosn.php" class="menu-button">
       <i class="bi bi-building"></i>
       Novopan
     </a>
