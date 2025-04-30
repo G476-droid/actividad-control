@@ -67,7 +67,7 @@ else
             <td><?= htmlspecialchars($row['codigo']) ?></td>
             <td><?= htmlspecialchars($row['producto']) ?></td>
             <td><?= htmlspecialchars($row['descripcion']) ?></td>
-            <td>$<?= number_format($row['precio_usd'], 2) ?></td>
+            <td>$<?= number_format($row['precio_usd'], 3) ?></td>
           </tr>
         <?php endwhile; ?>
       <?php else: ?>
