@@ -11,11 +11,15 @@ if (!isset($_POST['productos_seleccionados']) || empty($_POST['productos_selecci
 }
 
 $ids = $_POST['productos_seleccionados'];
-$placeholders[] = '$' . $i++; 
+$placeholders = [];
+$params = [];
+$i = 1; 
+foreach ($ids as $id) { 
+$placeholders[] = '$' . $i++;
 $params[] = $id;
 } 
-$sql = "SELECT * FROM productosn WHERE id IN(" . implode(",", $placeholders). ")";
-$result = pg_query_params($conn, $sql, $params);
+$sql = "SELECT * FROM productosn WHERE id IN(" . implode(",", $placeholders). ")"; 
+$result = pg_query_params($conn, $sql, $params); 
 ?>
 
 <!DOCTYPE html>
