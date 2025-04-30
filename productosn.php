@@ -69,7 +69,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 <tbody>
                     <?php foreach ($productosn as $producto): ?>
                         <tr>
-                            <td><input type="checkbox" name="productos[]" value="<?= $producto['id'] ?>"></td>
+                            <td><input type="checkbox" name="productosn[]" value="<?= $producto['id'] ?>"></td>
                             <td><?= htmlspecialchars($producto['codigo']) ?></td>
                             <td><?= htmlspecialchars($producto['producto']) ?></td>
                             <td><?= htmlspecialchars($producto['descripcion']) ?></td>
