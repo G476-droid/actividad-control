@@ -60,7 +60,7 @@ else
       </tr>
     </thead>
     <tbody>
-      <?php if ($result->num_rows > 0): ?>
+      <?php if (pg_num_rows($result) > 0): ?>
         <?php while ($row = pg_fetch_assoc($result)): ?>
           <tr>
             <td><input type="checkbox" name="productos_seleccionados[]" value="<?= $row['id'] ?>"></td>
