@@ -14,7 +14,7 @@ $ids = $_POST['productos_seleccionados'];
 $placeholders = implode(',', array_fill(0, count($ids), '?'));
 $types = str_repeat('i', count($ids));
 
-$stmt = $conn->prepare("SELECT * FROM productos WHERE id IN ($placeholders)");
+$stmt = $conn->prepare("SELECT * FROM productosn WHERE id IN ($placeholders)");
 $stmt->bind_param($types, ...$ids);
 $stmt->execute();
 $result = $stmt->get_result();
@@ -45,7 +45,7 @@ $result = $stmt->get_result();
     <?php while ($row = $result->fetch_assoc()): ?>
       <tr>
         <td><?= htmlspecialchars($row['codigo']) ?></td>
-        <td><?= htmlspecialchars($row['nombre']) ?></td>
+        <td><?= htmlspecialchars($row['producto']) ?></td>
         <td><?= htmlspecialchars($row['descripcion']) ?></td>
         <td>$<?= number_format($row['precio'], 2) ?></td>
       </tr>
