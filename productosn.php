@@ -13,12 +13,14 @@ if (!isset($_SESSION['persona_id']) || $_SESSION['es_admin'] !== true) {
 // Filtro
 $codigo = isset($_GET['codigo']) ? trim($_GET['codigo']) : '';
 $sql = "SELECT * FROM productosn";
-if ($codigo !== '') {
-    $sql .= " WHERE codigo = ?";
-    $stmt = $conn->prepare($sql);
-    $stmt->bind_param("s", $codigo);
-} else {
-    $stmt = $conn->prepare($sql);
+if ($codigo !== '') { 
+    $sql .= " WHERE codigo = $1"; 
+    $result = pg_query_params($conn, $sql, [$codigo]);
+    }
+else
+{ 
+    $result = pg_query($conn, $sql);
+                                                              
 }
 $stmt->execute();
 $result = $stmt->get_result();
@@ -60,7 +62,7 @@ $result = $stmt->get_result();
     </thead>
     <tbody>
       <?php if ($result->num_rows > 0): ?>
-        <?php while ($row = $result->fetch_assoc()): ?>
+        <?php while ($row = pg_fetch_assoc($result)): ?>
           <tr>
             <td><input type="checkbox" name="productos_seleccionados[]" value="<?= $row['id'] ?>"></td>
             <td><?= htmlspecialchars($row['codigo']) ?></td>
