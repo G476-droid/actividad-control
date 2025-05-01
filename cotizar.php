@@ -4,22 +4,16 @@ session_start();
 error_reporting(E_ALL);
 ini_set('display_errors', 1);
 
-// 1) Guardar la cotización cuando se aprueba
+// Guardar cotización al aprobar
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['aprobar'])) {
-    $req         = intval($_POST['requerimiento']);
-    $productos   = json_decode($_POST['datos'], true);
-    $subtotal    = $_POST['subtotal'];
-    $iva         = $_POST['iva'];
-    $total       = $_POST['total'];
+    $req       = intval($_POST['requerimiento']);
+    $productos = json_decode($_POST['datos'], true);
+    $subtotal  = $_POST['subtotal'];
+    $iva       = $_POST['iva'];
+    $total     = $_POST['total'];
 
     $sql = "INSERT INTO cotizaciones (requerimiento, productos, subtotal, iva, total) VALUES ($1, $2, $3, $4, $5)";
-    $params = [
-        $req,
-        json_encode($productos),
-        $subtotal,
-        $iva,
-        $total
-    ];
+    $params = [$req, json_encode($productos), $subtotal, $iva, $total];
     $res = pg_query_params($conn, $sql, $params);
 
     if ($res) {
@@ -32,22 +26,23 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['aprobar'])) {
     exit;
 }
 
-// 2) Cargar productos seleccionados
+// Cargar productos seleccionados
 if (!isset($_POST['productos_seleccionados']) || empty($_POST['productos_seleccionados'])) {
     echo "<p>No se seleccionaron productos para cotizar.</p>";
     echo "<a href='productosn.php'>Volver</a>";
     exit;
 }
 $ids = $_POST['productos_seleccionados'];
-$placeholders = []; $params = []; $i = 1;
-foreach ($ids as $id) {
-    $placeholders[] = '$' . $i++;
-    $params[]       = $id;
+$placeholders = [];
+$params = [];
+foreach ($ids as $i => $id) {
+    $placeholders[] = '$' . ($i+1);
+    $params[] = $id;
 }
-$sql    = "SELECT * FROM productosn WHERE id IN(" . implode(',', $placeholders) . ")";
+$sql = "SELECT * FROM productosn WHERE id IN(" . implode(',', $placeholders) . ")";
 $result = pg_query_params($conn, $sql, $params);
 
-// Obtener historial de cotizaciones incluyendo columna productos
+// Obtener historial de cotizaciones
 $h = pg_query($conn, "SELECT requerimiento, fecha, productos, subtotal, iva, total FROM cotizaciones ORDER BY fecha DESC, requerimiento DESC");
 ?>
 
@@ -64,31 +59,30 @@ $h = pg_query($conn, "SELECT requerimiento, fecha, productos, subtotal, iva, tot
       const productosArr = [];
       filas.forEach(fila => {
         const codigo = fila.querySelector('.codigo').textContent;
-        const desc   = fila.querySelector('.descripcion').textContent;
+        const descripcion = fila.querySelector('.descripcion').textContent;
         const precio = parseFloat(fila.querySelector('.precio').textContent);
-        const cant   = parseFloat(fila.querySelector('.cantidad').value) || 0;
-        const descnt = parseFloat(fila.querySelector('.descuento').value) || 0;
-        const valor  = (precio * cant) * (1 - descnt/100);
+        const cantidad = parseFloat(fila.querySelector('.cantidad').value) || 0;
+        const descuento = parseFloat(fila.querySelector('.descuento').value) || 0;
+        const valor = (precio * cantidad) * (1 - descuento/100);
         fila.querySelector('.valor').textContent = '$' + valor.toFixed(2);
         subtotal += valor;
-        productosArr.push({ codigo, desc, precio, cant, descnt, valor });
+        productosArr.push({ codigo, descripcion, precio, cantidad, descuento, valor });
       });
-      const iva   = subtotal * 0.15;
+      const iva = subtotal * 0.15;
       const total = subtotal + iva;
       document.getElementById('subtotal').textContent = '$' + subtotal.toFixed(2);
-      document.getElementById('iva').textContent      = '$' + iva.toFixed(2);
-      document.getElementById('total').textContent    = '$' + total.toFixed(2);
+      document.getElementById('iva').textContent = '$' + iva.toFixed(2);
+      document.getElementById('total').textContent = '$' + total.toFixed(2);
       document.getElementById('transferencia').textContent = '$' + total.toFixed(2);
-      document.getElementById('datos').value       = JSON.stringify(productosArr);
+      document.getElementById('datos').value = JSON.stringify(productosArr);
       document.getElementById('subtotal_input').value = subtotal.toFixed(2);
-      document.getElementById('iva_input').value      = iva.toFixed(2);
-      document.getElementById('total_input').value    = total.toFixed(2);
+      document.getElementById('iva_input').value = iva.toFixed(2);
+      document.getElementById('total_input').value = total.toFixed(2);
       return true;
     }
   </script>
 </head>
 <body class="p-4">
-
 <div class="container">
   <h3 class="mb-4 text-center">NOVOPAN</h3>
   <form method="POST" onsubmit="return calcularTotales()">
@@ -101,7 +95,6 @@ $h = pg_query($conn, "SELECT requerimiento, fecha, productos, subtotal, iva, tot
         <p><strong>FECHA:</strong> <?= date('d-M-Y') ?></p>
       </div>
     </div>
-
     <table class="table table-bordered text-center">
       <thead class="table-secondary">
         <tr>
@@ -122,7 +115,6 @@ $h = pg_query($conn, "SELECT requerimiento, fecha, productos, subtotal, iva, tot
       <?php endwhile; ?>
       </tbody>
     </table>
-
     <div class="row justify-content-end">
       <div class="col-md-4">
         <table class="table">
@@ -133,22 +125,16 @@ $h = pg_query($conn, "SELECT requerimiento, fecha, productos, subtotal, iva, tot
       </div>
     </div>
     <h5><strong>MONTO TRANSFERENCIA:</strong> <span id="transferencia">$0.00</span></h5>
-
-    <!-- hidden inputs -->
     <input type="hidden" name="datos" id="datos">
     <input type="hidden" name="subtotal" id="subtotal_input">
     <input type="hidden" name="iva" id="iva_input">
     <input type="hidden" name="total" id="total_input">
     <input type="hidden" name="aprobar" value="1">
-
     <div class="text-center">
       <button type="submit" class="btn btn-success mt-3">Aprobar Cotización</button>
     </div>
   </form>
-
   <hr class="my-5">
-
-  <!-- Historial de Cotizaciones -->
   <h4>Historial de Cotizaciones</h4>
   <?php if (pg_num_rows($h) > 0): ?>
     <table class="table table-striped mt-3">
@@ -166,7 +152,7 @@ $h = pg_query($conn, "SELECT requerimiento, fecha, productos, subtotal, iva, tot
           <td>
             <ul class="text-start mb-0">
             <?php foreach($items as $item): ?>
-              <li><?= htmlspecialchars($item['desc']) ?> (x<?= htmlspecialchars($item['cant']) ?>)</li>
+              <li><?= htmlspecialchars($item['descripcion']) ?> (x<?= htmlspecialchars($item['cantidad']) ?>)</li>
             <?php endforeach; ?>
             </ul>
           </td>
@@ -180,7 +166,6 @@ $h = pg_query($conn, "SELECT requerimiento, fecha, productos, subtotal, iva, tot
   <?php else: ?>
     <p class="text-muted">No hay cotizaciones registradas.</p>
   <?php endif; ?>
-
 </div>
 </body>
 </html>
