@@ -6,18 +6,13 @@ ini_set('display_errors', 1);
 
 // 1) Guardar la cotización cuando se aprueba
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['aprobar'])) {
-    // recoger datos del formulario
-    $req = intval($_POST['requerimiento']);          // número de requerimiento ingresado
-    $productos = json_decode($_POST['datos'], true);
-    $subtotal = $_POST['subtotal'];
-    $iva      = $_POST['iva'];
-    $total    = $_POST['total'];
+    $req         = intval($_POST['requerimiento']);          // número de requerimiento ingresado
+    $productos   = json_decode($_POST['datos'], true);
+    $subtotal    = $_POST['subtotal'];
+    $iva         = $_POST['iva'];
+    $total       = $_POST['total'];
 
-    // insertar con el requerimiento manual
-    $sql = "
-      INSERT INTO cotizaciones (requerimiento, productos, subtotal, iva, total)
-      VALUES ($1, $2, $3, $4, $5)
-    ";
+    $sql = "INSERT INTO cotizaciones (requerimiento, productos, subtotal, iva, total) VALUES ($1, $2, $3, $4, $5)";
     $params = [
       $req,
       json_encode($productos),
@@ -51,6 +46,9 @@ foreach ($ids as $id) {
 }
 $sql    = "SELECT * FROM productosn WHERE id IN(" . implode(',', $placeholders) . ")";
 $result = pg_query_params($conn, $sql, $params);
+
+// Obtener historial de cotizaciones
+$h = pg_query($conn, "SELECT id, requerimiento, fecha, productos, subtotal, iva, total FROM cotizaciones ORDER BY fecha DESC, requerimiento DESC");
 ?>
 
 <!DOCTYPE html>
@@ -71,7 +69,7 @@ $result = pg_query_params($conn, $sql, $params);
         const cant   = parseFloat(fila.querySelector('.cantidad').value) || 0;
         const descnt = parseFloat(fila.querySelector('.descuento').value) || 0;
         const valor  = (precio * cant) * (1 - descnt/100);
-        fila.querySelector('.valor').textContent = '$' + valor.toFixed(3);
+        fila.querySelector('.valor').textContent = '$' + valor.toFixed(2);
         subtotal += valor;
         productosArr.push({ codigo, desc, precio, cant, descnt, valor });
       });
@@ -81,7 +79,6 @@ $result = pg_query_params($conn, $sql, $params);
       document.getElementById('iva').textContent      = '$' + iva.toFixed(2);
       document.getElementById('total').textContent    = '$' + total.toFixed(2);
       document.getElementById('transferencia').textContent = '$' + total.toFixed(2);
-      // esconder inputs
       document.getElementById('datos').value       = JSON.stringify(productosArr);
       document.getElementById('subtotal_input').value = subtotal.toFixed(2);
       document.getElementById('iva_input').value      = iva.toFixed(2);
@@ -91,7 +88,6 @@ $result = pg_query_params($conn, $sql, $params);
   </script>
 </head>
 <body class="p-4">
-
 <div class="container">
   <h3 class="mb-4 text-center">NOVOPAN</h3>
   <form method="POST" onsubmit="return calcularTotales()">
@@ -117,10 +113,10 @@ $result = pg_query_params($conn, $sql, $params);
         <tr class="fila-producto">
           <td class="codigo"><?= htmlspecialchars($row['codigo']) ?></td>
           <td class="descripcion"><?= htmlspecialchars($row['descripcion']) ?></td>
-          <td class="precio"><?= number_format($row['precio_usd'],3,'.','') ?></td>
+          <td class="precio"><?= number_format($row['precio_usd'],2,'.','') ?></td>
           <td><input type="number" class="form-control cantidad" value="1" min="0" onchange="calcularTotales()"></td>
           <td><input type="number" class="form-control descuento" value="0" min="0" max="100" onchange="calcularTotales()"></td>
-          <td class="valor">$<?= number_format($row['precio_usd'],3) ?></td>
+          <td class="valor">$<?= number_format($row['precio_usd'],2) ?></td>
         </tr>
       <?php endwhile; ?>
       </tbody>
@@ -130,7 +126,7 @@ $result = pg_query_params($conn, $sql, $params);
       <div class="col-md-4">
         <table class="table">
           <tr><th>SUBTOTAL</th><td id="subtotal">$0.00</td></tr>
-          <tr><th>IVA (15%)</th><td id="iva">$0.000</td></tr>
+          <tr><th>IVA (15%)</th><td id="iva">$0.00</td></tr>
           <tr><th>TOTAL</th><td id="total">$0.00</td></tr>
         </table>
       </div>
@@ -153,21 +149,26 @@ $result = pg_query_params($conn, $sql, $params);
 
   <!-- Historial de Cotizaciones -->
   <h4>Historial de Cotizaciones</h4>
-  <?php
-    $h = pg_query($conn, "SELECT requerimiento, fecha, subtotal, iva, total 
-                          FROM cotizaciones ORDER BY fecha DESC, requerimiento DESC");
-    if (pg_num_rows($h) > 0): ?>
+  <?php if (pg_num_rows($h) > 0): ?>
     <table class="table table-striped mt-3">
       <thead class="table-info">
         <tr>
-          <th>Req.</th><th>Fecha</th><th>Subtotal</th><th>IVA</th><th>Total</th>
+          <th>Req.</th><th>Fecha</th><th>Productos</th><th>Subtotal</th><th>IVA</th><th>Total</th>
         </tr>
       </thead>
       <tbody>
       <?php while($c = pg_fetch_assoc($h)): ?>
+        <?php $items = json_decode($c['productos'], true); ?>
         <tr>
           <td><?= $c['requerimiento'] ?></td>
           <td><?= date('d-M-Y', strtotime($c['fecha'])) ?></td>
+          <td>
+            <ul class="text-start mb-0">
+            <?php foreach($items as $item): ?>
+              <li><?= htmlspecialchars($item['descripcion']) ?> (x<?= $item['cant'] ?>)</li>
+            <?php endforeach; ?>
+            </ul>
+          </td>
           <td>$<?= number_format($c['subtotal'],2) ?></td>
           <td>$<?= number_format($c['iva'],2) ?></td>
           <td><strong>$<?= number_format($c['total'],2) ?></strong></td>
