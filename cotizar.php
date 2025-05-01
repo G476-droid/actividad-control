@@ -165,7 +165,7 @@ $h = pg_query($conn, "SELECT id, requerimiento, fecha, productos, subtotal, iva,
           <td>
             <ul class="text-start mb-0">
             <?php foreach($items as $item): ?>
-              <li><?= htmlspecialchars($item['descripcion']) ?> (x<?= $item['cant'] ?>)</li>
+              <li><?= htmlspecialchars($item['productos']) ?> (x<?= $item['cant'] ?>)</li>
             <?php endforeach; ?>
             </ul>
           </td>
