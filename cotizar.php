@@ -12,14 +12,16 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['aprobar'])) {
     $iva       = $_POST['iva'];
     $total     = $_POST['total'];
 
-    $sql = "INSERT INTO cotizaciones (requerimiento, productos, subtotal, iva, total) VALUES ($1, $2, $3, $4, $5)";
+    // Usar OVERRIDING SYSTEM VALUE para una columna IDENTITY GENERADA ALWAYS
+    $sql = "INSERT INTO cotizaciones (requerimiento, productos, subtotal, iva, total) OVERRIDING SYSTEM VALUE VALUES ($1, $2, $3, $4, $5)";
     $params = [$req, json_encode($productos), $subtotal, $iva, $total];
     $res = pg_query_params($conn, $sql, $params);
 
     if ($res) {
         echo "<div class='alert alert-success'>Cotización #{$req} guardada correctamente.</div>";
     } else {
-        echo "<div class='alert alert-danger'>Error al guardar la cotización.</div>";
+        $err = pg_last_error($conn);
+        echo "<div class='alert alert-danger'>Error al guardar la cotización: {$err}</div>";
     }
 
     echo "<a href='productosn.php' class='btn btn-secondary'>Volver</a>";
