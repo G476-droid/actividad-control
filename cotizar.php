@@ -6,7 +6,7 @@ ini_set('display_errors', 1);
 
 // 1) Guardar la cotización cuando se aprueba
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['aprobar'])) {
-    $req         = intval($_POST['requerimiento']);          // número de requerimiento ingresado
+    $req         = intval($_POST['requerimiento']);
     $productos   = json_decode($_POST['datos'], true);
     $subtotal    = $_POST['subtotal'];
     $iva         = $_POST['iva'];
@@ -14,11 +14,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['aprobar'])) {
 
     $sql = "INSERT INTO cotizaciones (requerimiento, productos, subtotal, iva, total) VALUES ($1, $2, $3, $4, $5)";
     $params = [
-      $req,
-      json_encode($productos),
-      $subtotal,
-      $iva,
-      $total
+        $req,
+        json_encode($productos),
+        $subtotal,
+        $iva,
+        $total
     ];
     $res = pg_query_params($conn, $sql, $params);
 
@@ -47,8 +47,8 @@ foreach ($ids as $id) {
 $sql    = "SELECT * FROM productosn WHERE id IN(" . implode(',', $placeholders) . ")";
 $result = pg_query_params($conn, $sql, $params);
 
-// Obtener historial de cotizaciones
-$h = pg_query($conn, "SELECT id, requerimiento, fecha, productos, subtotal, iva, total FROM cotizaciones ORDER BY fecha DESC, requerimiento DESC");
+// Obtener historial de cotizaciones incluyendo columna productos
+$h = pg_query($conn, "SELECT requerimiento, fecha, productos, subtotal, iva, total FROM cotizaciones ORDER BY fecha DESC, requerimiento DESC");
 ?>
 
 <!DOCTYPE html>
@@ -88,6 +88,7 @@ $h = pg_query($conn, "SELECT id, requerimiento, fecha, productos, subtotal, iva,
   </script>
 </head>
 <body class="p-4">
+
 <div class="container">
   <h3 class="mb-4 text-center">NOVOPAN</h3>
   <form method="POST" onsubmit="return calcularTotales()">
@@ -165,7 +166,7 @@ $h = pg_query($conn, "SELECT id, requerimiento, fecha, productos, subtotal, iva,
           <td>
             <ul class="text-start mb-0">
             <?php foreach($items as $item): ?>
-              <li><?= htmlspecialchars($item['productos']) ?> (x<?= $item['cant'] ?>)</li>
+              <li><?= htmlspecialchars($item['desc']) ?> (x<?= htmlspecialchars($item['cant']) ?>)</li>
             <?php endforeach; ?>
             </ul>
           </td>
