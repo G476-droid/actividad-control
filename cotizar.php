@@ -71,7 +71,7 @@ $result = pg_query_params($conn, $sql, $params);
         const cant   = parseFloat(fila.querySelector('.cantidad').value) || 0;
         const descnt = parseFloat(fila.querySelector('.descuento').value) || 0;
         const valor  = (precio * cant) * (1 - descnt/100);
-        fila.querySelector('.valor').textContent = '$' + valor.toFixed(2);
+        fila.querySelector('.valor').textContent = '$' + valor.toFixed(3);
         subtotal += valor;
         productosArr.push({ codigo, desc, precio, cant, descnt, valor });
       });
@@ -117,10 +117,10 @@ $result = pg_query_params($conn, $sql, $params);
         <tr class="fila-producto">
           <td class="codigo"><?= htmlspecialchars($row['codigo']) ?></td>
           <td class="descripcion"><?= htmlspecialchars($row['descripcion']) ?></td>
-          <td class="precio"><?= number_format($row['precio_usd'],2,'.','') ?></td>
+          <td class="precio"><?= number_format($row['precio_usd'],3,'.','') ?></td>
           <td><input type="number" class="form-control cantidad" value="1" min="0" onchange="calcularTotales()"></td>
           <td><input type="number" class="form-control descuento" value="0" min="0" max="100" onchange="calcularTotales()"></td>
-          <td class="valor">$<?= number_format($row['precio_usd'],2) ?></td>
+          <td class="valor">$<?= number_format($row['precio_usd'],3) ?></td>
         </tr>
       <?php endwhile; ?>
       </tbody>
@@ -130,7 +130,7 @@ $result = pg_query_params($conn, $sql, $params);
       <div class="col-md-4">
         <table class="table">
           <tr><th>SUBTOTAL</th><td id="subtotal">$0.00</td></tr>
-          <tr><th>IVA (15%)</th><td id="iva">$0.00</td></tr>
+          <tr><th>IVA (15%)</th><td id="iva">$0.000</td></tr>
           <tr><th>TOTAL</th><td id="total">$0.00</td></tr>
         </table>
       </div>
