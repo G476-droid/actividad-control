@@ -11,18 +11,17 @@ if (!isset($_SESSION['persona_id']) || $_SESSION['es_admin'] !== true) {
 }
 
 // Filtro
-$codigo = isset($_GET['codigo']) ? trim($_GET['codigo']) : '';
+$termino = isset($_GET['termino']) ? trim($_GET['termino']) : '';
 $sql = "SELECT * FROM productosn";
-if ($codigo !== '') { 
-    $sql .= " WHERE codigo = $1"; 
-    $result = pg_query_params($conn, $sql, [$codigo]);
-    }
-else
-{ 
-    $result = pg_query($conn, $sql);
-                                                              
-}
+$params = [];
 
+if ($termino !== '') {
+    $sql .= " WHERE codigo ILIKE $1 OR producto ILIKE $1 OR descripcion ILIKE $1";
+    $params[] = "%$termino%";
+    $result = pg_query_params($conn, $sql, $params);
+} else {
+    $result = pg_query($conn, $sql);
+}
 ?>
 
 <!DOCTYPE html>
@@ -39,10 +38,11 @@ else
 <body>
 
 <h2 class="mb-4">Productos Novopan</h2>
+    <a href="admin.php" class="btn btn-outline-dark mb-4">← Volver al Menú Principal</a>
 
 <form method="GET" class="mb-4">
   <div class="input-group w-50">
-    <input type="text" name="codigo" class="form-control" placeholder="Buscar por código..." value="<?= htmlspecialchars($codigo) ?>">
+    <input type="text" name="termino" class="form-control" placeholder="Buscar por código, nombre o descripción..." value="<?= htmlspecialchars($termino) ?>">
     <button type="submit" class="btn btn-primary">Buscar</button>
     <a href="productosn.php" class="btn btn-secondary">Limpiar</a>
   </div>
@@ -81,4 +81,3 @@ else
 
 </body>
 </html>
-
