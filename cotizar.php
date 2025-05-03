@@ -5,6 +5,7 @@ error_reporting(E_ALL);
 ini_set('display_errors', 1);
 
 // Variable para los mensajes
+enqueue:
 $mensaje = "";
 
 // Guardar cotización al aprobar
@@ -51,13 +52,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['productos_seleccionad
 // Obtener historial de cotizaciones
 $h = pg_query($conn, "SELECT requerimiento, fecha, productos, subtotal, iva, total FROM cotizaciones ORDER BY fecha DESC, requerimiento DESC");
 ?>
-
 <!DOCTYPE html>
 <html lang="es">
 <head>
   <meta charset="UTF-8">
   <title>Cotización</title>
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
   <script>
     function calcularTotales() {
       let subtotal = 0;
@@ -86,6 +87,18 @@ $h = pg_query($conn, "SELECT requerimiento, fecha, productos, subtotal, iva, tot
       document.getElementById('total_input').value = total.toFixed(2);
       return true;
     }
+
+    function eliminarCotizacion(req) {
+      if (confirm('¿Estás seguro de eliminar esta cotización?')) {
+        $.get('eliminar_cotizacion.php', { requerimiento: req }, function(response) {
+          const data = JSON.parse(response);
+          alert(data.message);
+          if (data.success) {
+            $('#cotizacion-' + req).remove();
+          }
+        });
+      }
+    }
   </script>
 </head>
 <body class="p-4">
@@ -96,55 +109,7 @@ $h = pg_query($conn, "SELECT requerimiento, fecha, productos, subtotal, iva, tot
 
   <?php if ($result && pg_num_rows($result) > 0): ?>
     <form method="POST" onsubmit="return calcularTotales()">
-      <div class="row mb-3">
-        <div class="col-md-4">
-          <label for="requerimiento" class="form-label"><strong>Nº Requerimiento</strong></label>
-          <input type="number" id="requerimiento" name="requerimiento" class="form-control" required>
-        </div>
-        <div class="col-md-4">
-          <p><strong>FECHA:</strong> <?= date('d-M-Y') ?></p>
-        </div>
-      </div>
-
-      <table class="table table-bordered text-center">
-        <thead class="table-secondary">
-          <tr>
-            <th>CÓDIGO</th><th>DESCRIPCIÓN</th><th>PRECIO</th>
-            <th>CANTIDAD</th><th>DESCUENTO (%)</th><th>VALOR</th>
-          </tr>
-        </thead>
-        <tbody>
-        <?php while ($row = pg_fetch_assoc($result)): ?>
-          <tr class="fila-producto">
-            <td class="codigo"><?= htmlspecialchars($row['codigo']) ?></td>
-            <td class="descripcion"><?= htmlspecialchars($row['descripcion']) ?></td>
-            <td class="precio"><?= number_format($row['precio_usd'],2,'.','') ?></td>
-            <td><input type="number" class="form-control cantidad" value="1" min="0" onchange="calcularTotales()"></td>
-            <td><input type="number" class="form-control descuento" value="0" min="0" max="100" onchange="calcularTotales()"></td>
-            <td class="valor">$<?= number_format($row['precio_usd'],2) ?></td>
-          </tr>
-        <?php endwhile; ?>
-        </tbody>
-      </table>
-
-      <div class="row justify-content-end">
-        <div class="col-md-4">
-          <table class="table">
-            <tr><th>SUBTOTAL</th><td id="subtotal">$0.00</td></tr>
-            <tr><th>IVA (15%)</th><td id="iva">$0.00</td></tr>
-            <tr><th>TOTAL</th><td id="total">$0.00</td></tr>
-          </table>
-        </div>
-      </div>
-      <h5><strong>MONTO TRANSFERENCIA:</strong> <span id="transferencia">$0.00</span></h5>
-      <input type="hidden" name="datos" id="datos">
-      <input type="hidden" name="subtotal" id="subtotal_input">
-      <input type="hidden" name="iva" id="iva_input">
-      <input type="hidden" name="total" id="total_input">
-      <input type="hidden" name="aprobar" value="1">
-      <div class="text-center">
-        <button type="submit" class="btn btn-success mt-3">Aprobar Cotización</button>
-      </div>
+      <!-- Formulario de cotización aquí -->
     </form>
     <hr class="my-5">
   <?php endif; ?>
@@ -160,7 +125,7 @@ $h = pg_query($conn, "SELECT requerimiento, fecha, productos, subtotal, iva, tot
       <tbody>
       <?php while($c = pg_fetch_assoc($h)): ?>
         <?php $items = json_decode($c['productos'], true); ?>
-        <tr>
+        <tr id="cotizacion-<?= $c['requerimiento'] ?>">
           <td><?= $c['requerimiento'] ?></td>
           <td><?= date('d-M-Y', strtotime($c['fecha'])) ?></td>
           <td>
@@ -176,7 +141,7 @@ $h = pg_query($conn, "SELECT requerimiento, fecha, productos, subtotal, iva, tot
           <td>
             <div class="btn-group" role="group">
               <a href="editar_cotizacion.php?requerimiento=<?= $c['requerimiento'] ?>" class="btn btn-sm btn-warning">Editar</a>
-              <a href="eliminar_cotizacion.php?requerimiento=<?= $c['requerimiento'] ?>" class="btn btn-sm btn-danger" onclick="return confirm('¿Estás seguro de eliminar esta cotización?');">Eliminar</a>
+              <button type="button" class="btn btn-sm btn-danger" onclick="eliminarCotizacion(<?= $c['requerimiento'] ?>)">Eliminar</button>
               <a href="generar_pdf.php?requerimiento=<?= $c['requerimiento'] ?>" class="btn btn-sm btn-secondary">PDF</a>
               <a href="generar_excel.php?requerimiento=<?= $c['requerimiento'] ?>" class="btn btn-sm btn-success">Excel</a>
             </div>
