@@ -50,22 +50,7 @@ if ($es_admin) {
   <meta charset="UTF-8">
   <title>Actividades de <?= htmlspecialchars($persona['nombre']) ?></title>
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-  <style>
-    .prioridad-alta {
-      background-color: #ff4d4d !important; /* rojo intenso */
-      color: white;
-    }
-
-    .prioridad-media {
-      background-color: #ffcc00 !important; /* amarillo intenso */
-      color: black;
-    }
-
-    .prioridad-baja {
-      background-color: #33cc33 !important; /* verde intenso */
-      color: white;
-    }
-  </style>
+  
   <link href="style.css" rel="stylesheet">
 </head>
 <body class="container py-4">
@@ -87,21 +72,21 @@ if ($es_admin) {
 </thead>
 <tbody>
  <?php while ($row = pg_fetch_assoc($actividades_sql)): ?>
-     <?php
+    <?php
+      $clase_prioridad = '';
+      switch ($row['prioridad']) {
+        case 'alta':
+          $clase_prioridad = 'table-danger'; // rojo
+          break;
+        case 'media':
+          $clase_prioridad = 'table-warning'; // amarillo
+          break;
+        case 'baja':
+          $clase_prioridad = 'table-success'; // verde
+          break;
+        default:
           $clase_prioridad = '';
-          switch ($row['prioridad']) {
-            case 'alta':
-              $clase_prioridad = 'prioridad-alta';
-              break;
-            case 'media':
-              $clase_prioridad = 'prioridad-media';
-              break;
-            case 'baja':
-              $clase_prioridad = 'prioridad-baja';
-              break;
-            default:
-              $clase_prioridad = '';
-          }
+      }
     ?>
     <tr class="<?= $clase_prioridad ?>">
     <?php if ($es_admin): ?><td><?= htmlspecialchars($row['nombre_persona']) ?></td><?php endif; ?>
