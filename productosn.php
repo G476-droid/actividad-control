@@ -38,7 +38,7 @@ if ($termino !== '') {
 <body>
 
 <h2 class="mb-4">Productos Novopan</h2>
-    <a href="admin.php" class="btn btn-outline-dark mb-4">← Volver al Menú Principal</a>
+    <a href="vista_admin.php" class="btn btn-outline-dark mb-4">← Volver al Menú Principal</a>
 
 <form method="GET" class="mb-4">
   <div class="input-group w-50">
