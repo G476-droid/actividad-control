@@ -15,7 +15,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['aprobar'])) {
     $verif = pg_query_params($conn, "SELECT 1 FROM cotizaciones WHERE requerimiento = $1", [$req]);
 if (pg_num_rows($verif) > 0) {
     echo "<div class='alert alert-danger'>El requerimiento #{$req} ya existe. Debes usar un número diferente.</div>";
-    echo "<a href='productosn.php' class='btn btn-secondary mt-2'>Volver</a>";
+    echo "<a href='cotizar.php' class='btn btn-secondary mt-2'>Volver</a>";
     exit;
 }
 
@@ -32,7 +32,7 @@ if ($res) {
     echo "<div class='alert alert-danger'>Error al guardar la cotización: {$err}</div>";
 }
 
-    echo "<a href='productosn.php' class='btn btn-secondary'>Volver</a>";
+    echo "<a href='cotizar.php' class='btn btn-secondary'>Volver</a>";
     exit;
 }
 
