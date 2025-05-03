@@ -42,7 +42,7 @@ if ($termino !== '') {
 
 <form method="GET" class="mb-4">
   <div class="input-group w-50">
-    <input type="text" name="termino" class="form-control" placeholder="Buscar por código, nombre o descripción..." value="<?= htmlspecialchars($termino) ?>">
+    <input type="text" name="termino" class="form-control" placeholder="Buscar ..." value="<?= htmlspecialchars($termino) ?>">
     <button type="submit" class="btn btn-primary">Buscar</button>
     <a href="productosn.php" class="btn btn-secondary">Limpiar</a>
   </div>
