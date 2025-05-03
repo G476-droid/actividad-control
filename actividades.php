@@ -70,8 +70,24 @@ if ($es_admin) {
   </tr>
 </thead>
 <tbody>
-  <?php while ($row = pg_fetch_assoc($actividades_sql)): ?>
-  <tr class="<?= $row['completada'] === 't' ? 'table-success' : 'table-warning' ?>">
+ <?php while ($row = pg_fetch_assoc($actividades_sql)): ?>
+    <?php
+      $clase_prioridad = '';
+      switch ($row['prioridad']) {
+        case 'alta':
+          $clase_prioridad = 'table-danger'; // rojo
+          break;
+        case 'media':
+          $clase_prioridad = 'table-warning'; // amarillo
+          break;
+        case 'baja':
+          $clase_prioridad = 'table-success'; // verde
+          break;
+        default:
+          $clase_prioridad = '';
+      }
+    ?>
+    <tr class="<?= $clase_prioridad ?>">
     <?php if ($es_admin): ?><td><?= htmlspecialchars($row['nombre_persona']) ?></td><?php endif; ?>
     <td><?= htmlspecialchars($row['titulo']) ?></td>
     <td><?= htmlspecialchars($row['descripcion']) ?></td>
