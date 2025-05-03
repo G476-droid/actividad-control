@@ -87,6 +87,7 @@ $h = pg_query($conn, "SELECT requerimiento, fecha, productos, subtotal, iva, tot
 <body class="p-4">
 <div class="container">
   <h3 class="mb-4 text-center">NOVOPAN</h3>
+     <a href="vista_admin.php" class="btn btn-outline-dark mb-4">← Volver al Menú Principal</a>
   <form method="POST" onsubmit="return calcularTotales()">
     <div class="row mb-3">
       <div class="col-md-4">
