@@ -1,20 +1,19 @@
 <?php
 include "db.php";
-ob_start(); // Inicia el búfer de salida para prevenir errores de encabezado
+session_start();
 
-$req = intval($_GET['requerimiento']);
+// Verificar si se ha enviado el parámetro 'requerimiento'
+if (isset($_GET['requerimiento'])) {
+    $requerimiento = intval($_GET['requerimiento']);
+    $sql = "DELETE FROM cotizaciones WHERE requerimiento = $1";
+    $result = pg_query_params($conn, $sql, [$requerimiento]);
 
-$res = pg_query_params($conn, "DELETE FROM cotizaciones WHERE requerimiento = $1", [$req]);
-
-if ($res) {
-    // Redirige de forma segura
-    header("Location: cotizar.php");
-    exit;
+    if ($result) {
+        echo json_encode(['success' => true, 'message' => 'Cotización eliminada correctamente']);
+    } else {
+        echo json_encode(['success' => false, 'message' => 'Error al eliminar la cotización']);
+    }
 } else {
-    // Mostrar error amigable si falla
-    echo "<p>Error al eliminar la cotización.</p>";
-    echo "<a href='cotizar.php'>Volver</a>";
+    echo json_encode(['success' => false, 'message' => 'Requerimiento no especificado']);
 }
-ob_end_flush(); // Finaliza el búfer
 ?>
-
