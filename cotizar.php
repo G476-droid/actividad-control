@@ -109,7 +109,55 @@ $h = pg_query($conn, "SELECT requerimiento, fecha, productos, subtotal, iva, tot
 
   <?php if ($result && pg_num_rows($result) > 0): ?>
     <form method="POST" onsubmit="return calcularTotales()">
-      <!-- Formulario de cotización aquí -->
+       <div class="row mb-3">
+        <div class="col-md-4">
+          <label for="requerimiento" class="form-label"><strong>Nº Requerimiento</strong></label>
+          <input type="number" id="requerimiento" name="requerimiento" class="form-control" required>
+        </div>
+        <div class="col-md-4">
+          <p><strong>FECHA:</strong> <?= date('d-M-Y') ?></p>
+        </div>
+      </div>
+
+      <table class="table table-bordered text-center">
+        <thead class="table-secondary">
+          <tr>
+            <th>CÓDIGO</th><th>DESCRIPCIÓN</th><th>PRECIO</th>
+            <th>CANTIDAD</th><th>DESCUENTO (%)</th><th>VALOR</th>
+          </tr>
+        </thead>
+        <tbody>
+        <?php while ($row = pg_fetch_assoc($result)): ?>
+          <tr class="fila-producto">
+            <td class="codigo"><?= htmlspecialchars($row['codigo']) ?></td>
+            <td class="descripcion"><?= htmlspecialchars($row['descripcion']) ?></td>
+            <td class="precio"><?= number_format($row['precio_usd'],2,'.','') ?></td>
+            <td><input type="number" class="form-control cantidad" value="1" min="0" onchange="calcularTotales()"></td>
+            <td><input type="number" class="form-control descuento" value="0" min="0" max="100" onchange="calcularTotales()"></td>
+            <td class="valor">$<?= number_format($row['precio_usd'],2) ?></td>
+          </tr>
+        <?php endwhile; ?>
+        </tbody>
+      </table>
+
+      <div class="row justify-content-end">
+        <div class="col-md-4">
+          <table class="table">
+            <tr><th>SUBTOTAL</th><td id="subtotal">$0.00</td></tr>
+            <tr><th>IVA (15%)</th><td id="iva">$0.00</td></tr>
+            <tr><th>TOTAL</th><td id="total">$0.00</td></tr>
+          </table>
+        </div>
+      </div>
+      <h5><strong>MONTO TRANSFERENCIA:</strong> <span id="transferencia">$0.00</span></h5>
+      <input type="hidden" name="datos" id="datos">
+      <input type="hidden" name="subtotal" id="subtotal_input">
+      <input type="hidden" name="iva" id="iva_input">
+      <input type="hidden" name="total" id="total_input">
+      <input type="hidden" name="aprobar" value="1">
+      <div class="text-center">
+        <button type="submit" class="btn btn-success mt-3">Aprobar Cotización</button>
+      </div>
     </form>
     <hr class="my-5">
   <?php endif; ?>
