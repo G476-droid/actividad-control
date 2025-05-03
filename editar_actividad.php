@@ -1,19 +1,22 @@
 <?php
 include "db.php";
+session_start();
 
 // Validar y castear parámetros
 $id = isset($_GET['id']) ? (int) $_GET['id'] : 0;
 $persona_id = isset($_GET['persona_id']) ? (int) $_GET['persona_id'] : 0;
+$es_admin = $_SESSION['es_admin'] ?? false; // Verifica si es administrador
 
 if ($_POST) {
+  $persona_id_post = $es_admin ? (int) $_POST['persona_id'] : $persona_id; // Si es admin, obtiene el ID del usuario seleccionado
   $titulo = $_POST['titulo'];
   $descripcion = $_POST['descripcion'];
   $fecha = $_POST['fecha'];
   $prioridad = $_POST['prioridad'];
 
   // Usamos pg_query_params para evitar SQL injection
-  $query = "UPDATE actividades SET titulo = $1, descripcion = $2, fecha = $3, prioridad = $4 WHERE id = $5";
-  $params = array($titulo, $descripcion, $fecha, $prioridad, $id);
+  $query = "UPDATE actividades SET persona_id = $1, titulo = $2, descripcion = $3, fecha = $4, prioridad = $5 WHERE id = $6";
+  $params = array($persona_id_post, $titulo, $descripcion, $fecha, $prioridad, $id);
 
   $result = pg_query_params($conn, $query, $params);
 
@@ -22,7 +25,7 @@ if ($_POST) {
   }
 
   // Redirigir de vuelta a la lista de actividades
-  header("Location: actividades.php?persona_id=" . $persona_id);
+  header("Location: actividades.php?persona_id=" . $persona_id_post);
   exit;
 }
 
@@ -47,6 +50,19 @@ $act = pg_fetch_assoc($act_result);
 <body class="container py-4">
   <h2>Editar Actividad</h2>
   <form method="POST">
+    <?php if ($es_admin): ?>
+      <label for="persona_id" class="form-label">Asignar a:</label>
+      <select name="persona_id" class="form-select mb-2" required>
+        <option value="">-- Selecciona un usuario --</option>
+        <?php
+          $usuarios_sql = pg_query($conn, "SELECT id, nombre FROM personas ORDER BY nombre ASC");
+          while ($usuario = pg_fetch_assoc($usuarios_sql)):
+        ?>
+          <option value="<?= $usuario['id'] ?>" <?= $act['persona_id'] == $usuario['id'] ? 'selected' : '' ?>><?= htmlspecialchars($usuario['nombre']) ?></option>
+        <?php endwhile; ?>
+      </select>
+    <?php endif; ?>
+
     <input name="titulo" value="<?= htmlspecialchars($act['titulo']) ?>" class="form-control mb-2" required>
     <textarea name="descripcion" class="form-control mb-2"><?= htmlspecialchars($act['descripcion']) ?></textarea>
     <input name="fecha" type="date" value="<?= htmlspecialchars($act['fecha']) ?>" class="form-control mb-2" required>
