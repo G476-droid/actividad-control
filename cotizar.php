@@ -105,7 +105,8 @@ $h = pg_query($conn, "SELECT requerimiento, fecha, productos, subtotal, iva, tot
 <div class="container">
     <?php if (!empty($mensaje)) echo $mensaje; ?>
   <h3 class="mb-4 text-center">NOVOPAN</h3>
-  <a href="productosn.php" class="btn btn-outline-dark mb-4">← Volver al Menú Principal</a>
+  <a href="productosn.php" class="btn btn-success mb-4">+ Crear Nueva Cotización</a>
+
 
   <?php if ($result && pg_num_rows($result) > 0): ?>
     <form method="POST" onsubmit="return calcularTotales()">
