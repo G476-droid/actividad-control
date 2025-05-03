@@ -107,14 +107,7 @@ $h = pg_query($conn, "SELECT requerimiento, fecha, productos, subtotal, iva, tot
       </thead>
       <tbody>
       <?php while ($row = pg_fetch_assoc($result)): ?>
-    <td>
-  <div class="btn-group" role="group">
-    <a href="editar_cotizacion.php?requerimiento=<?= $c['requerimiento'] ?>" class="btn btn-sm btn-warning">Editar</a>
-    <a href="eliminar_cotizacion.php?requerimiento=<?= $c['requerimiento'] ?>" class="btn btn-sm btn-danger" onclick="return confirm('¿Estás seguro de eliminar esta cotización?');">Eliminar</a>
-    <a href="generar_pdf.php?requerimiento=<?= $c['requerimiento'] ?>" class="btn btn-sm btn-secondary">PDF</a>
-    <a href="generar_excel.php?requerimiento=<?= $c['requerimiento'] ?>" class="btn btn-sm btn-success">Excel</a>
-  </div>
-</td>
+    
         <tr class="fila-producto">
           <td class="codigo"><?= htmlspecialchars($row['codigo']) ?></td>
           <td class="descripcion"><?= htmlspecialchars($row['descripcion']) ?></td>
@@ -157,6 +150,14 @@ $h = pg_query($conn, "SELECT requerimiento, fecha, productos, subtotal, iva, tot
       </thead>
       <tbody>
       <?php while($c = pg_fetch_assoc($h)): ?>
+    <td>
+  <div class="btn-group" role="group">
+    <a href="editar_cotizacion.php?requerimiento=<?= $c['requerimiento'] ?>" class="btn btn-sm btn-warning">Editar</a>
+    <a href="eliminar_cotizacion.php?requerimiento=<?= $c['requerimiento'] ?>" class="btn btn-sm btn-danger" onclick="return confirm('¿Estás seguro de eliminar esta cotización?');">Eliminar</a>
+    <a href="generar_pdf.php?requerimiento=<?= $c['requerimiento'] ?>" class="btn btn-sm btn-secondary">PDF</a>
+    <a href="generar_excel.php?requerimiento=<?= $c['requerimiento'] ?>" class="btn btn-sm btn-success">Excel</a>
+  </div>
+</td>
         <?php $items = json_decode($c['productos'], true); ?>
         <tr>
           <td><?= $c['requerimiento'] ?></td>
