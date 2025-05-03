@@ -37,10 +37,13 @@ if ($termino !== '') {
 </head>
 <body>
 
-<h2 class="mb-4">Productos Novopan</h2>
-    <a href="vista_admin.php" class="btn btn-outline-dark mb-4">← Volver al Menú Principal</a>
-    <a href="cotizar.php" class="btn btn-info mt-3">Ver Cotizaciones</a>
-
+<div class="d-flex justify-content-between align-items-center mb-4">
+  <h2 class="mb-0">Productos Novopan</h2>
+  <div>
+    <a href="vista_admin.php" class="btn btn-outline-dark me-2">← Menú Principal</a>
+    <a href="cotizar.php" class="btn btn-info">Ver Cotizaciones</a>
+  </div>
+</div>
 
 <form method="GET" class="mb-4">
   <div class="input-group w-50">
