@@ -70,6 +70,45 @@ if ($es_admin) {
     <th>Acciones</th>
   </tr>
 </thead>
+    <?php
+  // Obtener fecha actual (formato 'Y-m-d')
+  $hoy = date('Y-m-d');
+
+  // Reiniciar puntero de resultados
+  pg_result_seek($actividades_sql, 0);
+
+  // Mensaje inicial
+  $mensaje = "📅 *Actividades pendientes para hoy ($hoy):*\n\n";
+
+  $hay_actividades = false;
+
+  while ($row = pg_fetch_assoc($actividades_sql)) {
+    if ($row['fecha'] === $hoy) {
+      $hay_actividades = true;
+      $nombre = $es_admin ? $row['nombre_persona'] : $persona['nombre'];
+      $mensaje .= "👤 *{$nombre}*\n";
+      $mensaje .= "📌 *" . $row['titulo'] . "*\n";
+      $mensaje .= "🗒️ " . $row['descripcion'] . "\n";
+      $mensaje .= "⚠️ Prioridad: " . ucfirst($row['prioridad']) . "\n";
+      $mensaje .= "-----------------------\n";
+    }
+  }
+
+  if (!$hay_actividades) {
+    $mensaje = "✅ No hay actividades pendientes para hoy ($hoy).";
+  }
+
+  // Codificar para URL
+  $mensaje_url = urlencode($mensaje);
+  $telefono_destino = ""; // Puedes poner algo como "5215512345678"
+  $whatsapp_link = "https://wa.me/{$telefono_destino}?text={$mensaje_url}";
+?>
+<div class="mb-4">
+  <a href="<?= $whatsapp_link ?>" target="_blank" class="btn btn-success">
+    📲 Enviar Actividades de Hoy por WhatsApp
+  </a>
+</div>
+
 <tbody>
  <?php while ($row = pg_fetch_assoc($actividades_sql)): ?>
     <?php
