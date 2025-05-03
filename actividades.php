@@ -88,8 +88,11 @@ $whatsapp_link = "https://wa.me/{$telefono_destino}?text={$mensaje_url}";
   <h2>Actividades de <?= htmlspecialchars($persona['nombre']) ?></h2>
   <a href="nueva_actividad.php?persona_id=<?= $persona_id ?>" class="btn btn-sm btn-success mb-2">+ Nueva Actividad</a>
   <a href="actividad_completa.php?persona_id=<?= $persona_id ?>" class="btn btn-sm btn-primary mb-2">✅ Ver Completadas</a>
-  <a href="<?= $whatsapp_link ?>" target="_blank" class="btn btn-sm btn-success mb-2">📲 Enviar Actividades de Hoy por WhatsApp</a>
-  <a href="logout.php" class="btn btn-sm btn-outline-danger float-end">Cerrar sesión</a>
+<?php if ($hay_actividades): ?>
+  <a href="<?= $whatsapp_link ?>" target="_blank" class="btn btn-sm btn-success mb-2">
+    📲 Enviar Actividades de Hoy por WhatsApp
+  </a>
+<?php endif; ?>  <a href="logout.php" class="btn btn-sm btn-outline-danger float-end">Cerrar sesión</a>
 
   <table class="table table-bordered">
     <thead>
