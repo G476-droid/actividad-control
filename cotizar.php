@@ -87,7 +87,7 @@ $h = pg_query($conn, "SELECT requerimiento, fecha, productos, subtotal, iva, tot
 <body class="p-4">
 <div class="container">
   <h3 class="mb-4 text-center">NOVOPAN</h3>
-     <a href="vista_admin.php" class="btn btn-outline-dark mb-4">← Volver al Menú Principal</a>
+     <a href="productosn.php" class="btn btn-outline-dark mb-4">← Volver al Menú Principal</a>
   <form method="POST" onsubmit="return calcularTotales()">
     <div class="row mb-3">
       <div class="col-md-4">
@@ -107,6 +107,14 @@ $h = pg_query($conn, "SELECT requerimiento, fecha, productos, subtotal, iva, tot
       </thead>
       <tbody>
       <?php while ($row = pg_fetch_assoc($result)): ?>
+    <td>
+  <div class="btn-group" role="group">
+    <a href="editar_cotizacion.php?requerimiento=<?= $c['requerimiento'] ?>" class="btn btn-sm btn-warning">Editar</a>
+    <a href="eliminar_cotizacion.php?requerimiento=<?= $c['requerimiento'] ?>" class="btn btn-sm btn-danger" onclick="return confirm('¿Estás seguro de eliminar esta cotización?');">Eliminar</a>
+    <a href="generar_pdf.php?requerimiento=<?= $c['requerimiento'] ?>" class="btn btn-sm btn-secondary">PDF</a>
+    <a href="generar_excel.php?requerimiento=<?= $c['requerimiento'] ?>" class="btn btn-sm btn-success">Excel</a>
+  </div>
+</td>
         <tr class="fila-producto">
           <td class="codigo"><?= htmlspecialchars($row['codigo']) ?></td>
           <td class="descripcion"><?= htmlspecialchars($row['descripcion']) ?></td>
@@ -143,7 +151,8 @@ $h = pg_query($conn, "SELECT requerimiento, fecha, productos, subtotal, iva, tot
     <table class="table table-striped mt-3">
       <thead class="table-info">
         <tr>
-          <th>Req.</th><th>Fecha</th><th>Productos</th><th>Subtotal</th><th>IVA</th><th>Total</th>
+          <th>Req.</th><th>Fecha</th><th>Productos</th><th>Subtotal</th><th>IVA</th><th>Total</th><th>Acciones</th>
+  </tr>
         </tr>
       </thead>
       <tbody>
