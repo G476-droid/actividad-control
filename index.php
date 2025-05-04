@@ -17,8 +17,11 @@ if ($_POST) {
   if ($persona = pg_fetch_assoc($res)) {
     $_SESSION['persona_id'] = $persona['id'];
     $_SESSION['es_admin'] = ($persona['es_admin'] ?? false) === 't';
-     if ($_SESSION['es_admin']) {
-    header("Location: vista_admin.php"); 
+  
+    if (strtoupper($persona['nombre']) === 'MARIO') {
+    header("Location: indexcursos.php");
+  } elseif ($_SESSION['es_admin']) {
+    header("Location: vista_admin.php");
   } else {
     header("Location: actividades.php");
   }
