@@ -26,12 +26,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['aprobar'])) {
         $params = [$req, json_encode($productos), $subtotal, $iva, $total];
         $res = pg_query_params($conn, $sql, $params);
 
-        if ($res) {
-            $mensaje = "<div class='alert alert-success mt-3'>Cotización #{$req} guardada correctamente.</div>";
-        } else {
-            $err = pg_last_error($conn);
-            $mensaje = "<div class='alert alert-danger mt-3'>Error al guardar la cotización: {$err}</div>";
-        }
+       if ($res) {
+    header("Location: historial_cotizaciones.php");
+    exit;
+} else {
+    $err = pg_last_error($conn);
+    $mensaje = "<div class='alert alert-danger mt-3'>Error al guardar la cotización: {$err}</div>";
+}
     }
 }
 
