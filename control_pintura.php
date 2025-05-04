@@ -80,6 +80,7 @@ $trabajos = pg_query($conn, "SELECT * FROM control_pintura ORDER BY id DESC");
           <button type="submit" class="btn btn-primary"><?= $editData ? 'Actualizar' : 'Guardar' ?></button>
           <?php if ($editData): ?>
             <a href="control_pintura.php" class="btn btn-secondary">Cancelar</a>
+            <a href="taller.php" class="btn btn-secondary mb-3">← Volver al Menú Principal</a>
           <?php endif; ?>
         </form>
       </div>
