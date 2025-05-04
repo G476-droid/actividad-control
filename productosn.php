@@ -41,7 +41,7 @@ if ($termino !== '') {
   <h2 class="mb-0">Productos Novopan</h2>
   <div>
     <a href="vista_admin.php" class="btn btn-outline-dark me-2">← Menú Principal</a>
-    <a href="cotizar.php" class="btn btn-info">Ver Cotizaciones</a>
+    <a href="historial_cotizaciones.php" class="btn btn-info">Ver Cotizaciones</a>
   </div>
 </div>
 
