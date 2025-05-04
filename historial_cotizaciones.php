@@ -1,4 +1,7 @@
 <?php
+if (!isset($conn)) {
+    include "db.php";
+}
 if (!isset($h)) {
     // Si no se ha definido la variable $h, realiza la consulta
     $h = pg_query($conn, "SELECT requerimiento, fecha, productos, subtotal, iva, total FROM cotizaciones ORDER BY fecha DESC, requerimiento DESC");
