@@ -163,8 +163,9 @@ $h = pg_query($conn, "SELECT requerimiento, fecha, productos, subtotal, iva, tot
     <hr class="my-5">
   <?php endif; ?>
 
-  <?php include 'historial_cotizaciones.php'; ?>
+ 
 
 </div>
+    
 </body>
 </html>
