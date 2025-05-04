@@ -93,8 +93,20 @@ if (!isset($h)) {
 <script>
 function eliminarCotizacion(requerimiento) {
   if (confirm("¿Estás seguro de eliminar esta cotización?")) {
-    // Puedes implementar una llamada AJAX aquí o redirigir
-    window.location.href = "eliminar_cotizacion.php?requerimiento=" + requerimiento;
+    fetch("eliminar_cotizacion.php?requerimiento=" + requerimiento)
+      .then(res => res.json())
+      .then(data => {
+        if (data.success) {
+          const fila = document.getElementById("cotizacion-" + requerimiento);
+          if (fila) fila.remove();
+        } else {
+          alert("Error al eliminar: " + data.message);
+        }
+      })
+      .catch(err => {
+        console.error(err);
+        alert("Error de red o del servidor.");
+      });
   }
 }
 </script>
