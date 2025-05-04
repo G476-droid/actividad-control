@@ -35,7 +35,7 @@ if (!isset($h)) {
   <div class="d-flex justify-content-between align-items-center mb-3">
     <h2 class="fw-bold">Historial de Cotizaciones</h2>
     <div>
-      <a href="cotizar.php" class="btn btn-primary me-2 btn-custom">+ Nueva Cotización</a>
+      <a href="productosn.php" class="btn btn-primary me-2 btn-custom">+ Nueva Cotización</a>
       <a href="vista_admin.php" class="btn btn-outline-secondary btn-custom">Regresar</a>
     </div>
   </div>
