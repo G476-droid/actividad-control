@@ -160,7 +160,6 @@ $h = pg_query($conn, "SELECT requerimiento, fecha, productos, subtotal, iva, tot
         <button type="submit" class="btn btn-success mt-3">Aprobar Cotización</button>
       </div>
     </form>
-    <hr class="my-5">
   <?php endif; ?>
 
  
