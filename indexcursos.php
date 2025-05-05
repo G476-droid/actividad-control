@@ -23,9 +23,7 @@
           <div class="card-body d-flex flex-column">
             <h5 class="card-title"><?= htmlspecialchars($curso['titulo']) ?></h5>
             <p class="card-text"><?= htmlspecialchars($curso['descripcion']) ?></p>
-            <p class="text-muted small"><?= htmlspecialchars($curso['caracteristicas']) ?></p>
             <div class="mt-auto">
-              <strong class="text-primary">$<?= number_format($curso['precio'], 2) ?></strong>
               <a href="curso.php?id=<?= $curso['id'] ?>" class="btn btn-outline-primary w-100 mt-2">Ver Curso</a>
             </div>
           </div>
