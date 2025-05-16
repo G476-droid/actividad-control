@@ -14,7 +14,7 @@
   <div class="col-md-3">
     <label for="color" class="form-label">Color del Perfil</label>
     <select name="color" id="color" class="form-select" required>
-      <option value="natural">Natural</option>
+      <option value="naturalc">Natural</option>
       <option value="basico">Básico</option>
       <option value="especial">Especial</option>
     </select>
