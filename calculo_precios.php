@@ -1,4 +1,16 @@
-<?php include 'db.php'; ?>
+<?php
+session_start();
+include "db.php";
+error_reporting(E_ALL);
+ini_set('display_errors', 1);
+
+// Verificar que el usuario sea administrador
+if (!isset($_SESSION['persona_id']) || empty($_SESSION['es_admin']) || $_SESSION['es_admin'] !== true) {
+    header("Location: index.php"); // Redirigir si no es admin
+    exit;
+}
+?>
+  
 <!DOCTYPE html>
 <html lang="es">
 <head>
