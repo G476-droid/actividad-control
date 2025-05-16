@@ -63,7 +63,9 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
         $suma_ingresada = $ancho + $alto;
 
       $query = "
-    SELECT *, ABS((alto + ancho) - $suma_ingresada) AS diferencia
+    SELECT *, 
+        GREATEST(ancho, alto) AS mayor_en_bd,
+        ABS(GREATEST(ancho, alto) - $mayor) AS diferencia
     FROM precios_perfiles
     ORDER BY diferencia ASC
     LIMIT 1
