@@ -62,12 +62,12 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
         $menor = min($ancho, $alto);
         $suma_ingresada = $ancho + $alto;
 
-        $query = "
-            SELECT *, ABS(alto - $mayor) AS diferencia
-            FROM precios_perfiles
-            ORDER BY diferencia ASC
-            LIMIT 1
-        ";
+      $query = "
+    SELECT *, ABS((alto + ancho) - $suma_ingresada) AS diferencia
+    FROM precios_perfiles
+    ORDER BY diferencia ASC
+    LIMIT 1
+";
         $res = pg_query($conn, $query);
         $mejor_match = pg_fetch_assoc($res);
 
