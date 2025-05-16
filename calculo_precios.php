@@ -62,7 +62,6 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
         $menor = min($ancho, $alto);
         $suma_ingresada = $ancho + $alto;
 
-        // Buscar el match más cercano por alto
         $query = "
             SELECT *, ABS(alto - $mayor) AS diferencia
             FROM precios_perfiles
@@ -73,22 +72,11 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
         $mejor_match = pg_fetch_assoc($res);
 
         $suma_match = $mejor_match['ancho'] + $mejor_match['alto'];
-        $exceso = 0;
-        $ajuste_ancho = $mejor_match['ancho'];
-        $suma_ajustada = $suma_match;
-        $diferencia = 0;
-        $pintar_rojo = false;
 
-        // Lógica para ajustar si el alto en match es mayor al ingresado
-        if ($mejor_match['alto'] > $mayor) {
-            $exceso = $mejor_match['alto'] - $mayor;
-            $ajuste_ancho = $mejor_match['ancho'] - $exceso;
-            $suma_ajustada = $ajuste_ancho + $mejor_match['alto'];
-            $diferencia = abs($suma_ingresada - $suma_ajustada);
-            if ($suma_ajustada !== $suma_ingresada) {
-                $pintar_rojo = true;
-            }
-        }
+        // Reajuste proporcional
+        $porc_ancho = $mejor_match['ancho'] / $suma_match;
+        $ancho_reajuste = round($porc_ancho * $suma_ingresada);
+        $alto_reajuste = $suma_ingresada - $ancho_reajuste;
 
         echo "<div class='alert alert-success mt-4'>";
         echo "<h5>Resultado Encontrado:</h5><ul>";
@@ -97,13 +85,8 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
         echo "<li><strong>Área:</strong> {$mejor_match['area']} mm²</li>";
         echo "<li><strong>Precio ($color):</strong> $".number_format($mejor_match[$color], 2)."</li>";
         echo "<li><strong>Suma ingresada:</strong> {$suma_ingresada} mm</li>";
-        echo "<li><strong>Suma del match:</strong> {$suma_match} mm</li>";
-        if ($exceso > 0) {
-            echo "<li class='text-danger'><strong>Exceso de alto:</strong> {$exceso} mm</li>";
-            echo "<li><strong>Ancho ajustado:</strong> {$ajuste_ancho} mm</li>";
-            echo "<li><strong>Suma ajustada:</strong> {$suma_ajustada} mm</li>";
-            echo "<li><strong>Diferencia:</strong> {$diferencia} mm</li>";
-        }
+        echo "<li><strong>Suma del match (ajustada):</strong> {$suma_ingresada} mm</li>";
+        echo "<li><strong>Medidas de reajuste:</strong> Ancho = {$ancho_reajuste} mm, Alto = {$alto_reajuste} mm</li>";
         echo "</ul></div>";
 
         // Mostrar tabla
@@ -115,8 +98,8 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
         </tr></thead><tbody>";
         while ($fila = pg_fetch_assoc($todos)) {
             $destacar = "";
-            if ($fila['alto'] == $mejor_match['alto']) {
-                $destacar = $pintar_rojo ? "class='table-danger'" : "class='highlight'";
+            if ($fila['alto'] == $mejor_match['alto'] && $fila['ancho'] == $mejor_match['ancho']) {
+                $destacar = "class='highlight'";
             }
             echo "<tr $destacar>";
             echo "<td>{$fila['ancho']}</td>";
@@ -130,6 +113,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
         echo "</tbody></table>";
     }
 }
+
 ?>
 
 </body>
