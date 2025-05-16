@@ -62,9 +62,11 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
         $menor = min($ancho, $alto);
         $suma_ingresada = $ancho + $alto;
 
-     $query = "
+    $query = "
     SELECT *, 
-        ABS(ancho - $ancho) + ABS(alto - $alto) AS diferencia_total
+        GREATEST(ancho, alto) AS mayor_en_bd,
+        LEAST(ancho, alto) AS menor_en_bd,
+        ABS(GREATEST(ancho, alto) - $mayor) + ABS(LEAST(ancho, alto) - $menor) AS diferencia_total
     FROM precios_perfiles
     ORDER BY diferencia_total ASC
     LIMIT 1
