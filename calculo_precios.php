@@ -27,7 +27,7 @@ if (!isset($_SESSION['persona_id']) || empty($_SESSION['es_admin']) || $_SESSION
     <label for="color" class="form-label">Color del Perfil</label>
     <select name="color" id="color" class="form-select" required>
       <option value="naturalc">Natural</option>
-      <option value="basico">Básico (Nehro, Antracita, Blanco)</option>
+      <option value="basico">Básico (Negro, Antracita, Blanco)</option>
       <option value="especial">Especial(Dorado, Champagne, Bronce, Beige, U otros)</option>
     </select>
   </div>
