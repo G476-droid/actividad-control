@@ -86,6 +86,11 @@ if (!isset($_SESSION['persona_id']) || empty($_SESSION['es_admin']) || $_SESSION
       <i class="bi bi-people-fill"></i>
       Grupo Euro
     </a>
+       <a href="calculo_precios.php" class="menu-button">
+      <i class="bi bi-people-fill"></i>
+      CALCULO PUERTAS ALUMX
+    </a>
+
   </div>
 
   <div class="logout-btn">
