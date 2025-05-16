@@ -17,6 +17,11 @@ if (!isset($_SESSION['persona_id']) || empty($_SESSION['es_admin']) || $_SESSION
   <meta charset="UTF-8">
   <title>Calculadora de Precio de Perfiles</title>
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <style>
+    .highlight {
+      background-color: #d1e7dd !important;
+    }
+  </style>
 </head>
 <body class="container py-5">
 
@@ -33,11 +38,11 @@ if (!isset($_SESSION['persona_id']) || empty($_SESSION['es_admin']) || $_SESSION
   </div>
   <div class="col-md-3">
     <label class="form-label">Ancho (mm)</label>
-    <input type="text" name="ancho" class="form-control" pattern="^\d{3,4}$" title="Ingrese un número entero de 3 a 4 dígitos sin puntos ni comas (ej: 800, 1050)" required>
+    <input type="text" name="ancho" class="form-control" pattern="^\d{3,4}$" required>
   </div>
   <div class="col-md-3">
     <label class="form-label">Alto (mm)</label>
-    <input type="text" name="alto" class="form-control" pattern="^\d{3,4}$" title="Ingrese un número entero de 3 a 4 dígitos sin puntos ni comas (ej: 800, 1050)" required>
+    <input type="text" name="alto" class="form-control" pattern="^\d{3,4}$" required>
   </div>
   <div class="col-md-3 d-flex align-items-end">
     <button type="submit" class="btn btn-primary w-100">Calcular</button>
@@ -47,44 +52,58 @@ if (!isset($_SESSION['persona_id']) || empty($_SESSION['es_admin']) || $_SESSION
 <?php
 if ($_SERVER["REQUEST_METHOD"] === "POST") {
     $color = $_POST['color'];
-    $ancho = $_POST['ancho'];
-    $alto = $_POST['alto'];
+    $ancho = intval($_POST['ancho']);
+    $alto = intval($_POST['alto']);
 
-    // Validación de formato
-    if (!preg_match('/^\d{3,4}$/', $ancho) || !preg_match('/^\d{3,4}$/', $alto)) {
-        echo "<div class='alert alert-danger mt-4'>Por favor ingrese solo números enteros de 3 o 4 dígitos sin puntos ni comas.</div>";
+    if ($ancho <= 0 || $alto <= 0) {
+        echo "<div class='alert alert-danger mt-4'>Ingrese valores válidos.</div>";
     } else {
-        $ancho = intval($ancho);
-        $alto = intval($alto);
-
         $mayor = max($ancho, $alto);
         $menor = min($ancho, $alto);
-        $suma = $mayor + $menor;
+        $suma_ingresada = $ancho + $alto;
 
-        $suma_escapada = pg_escape_literal($conn, $suma);
-
+        // Buscar la fila más cercana con base en la altura
         $query = "
-            SELECT *, ABS((ancho + alto) - $suma) AS diferencia
+            SELECT *, ABS(alto - $mayor) AS diferencia
             FROM precios_perfiles
             ORDER BY diferencia ASC
             LIMIT 1
         ";
-        $result = pg_query($conn, $query);
+        $res = pg_query($conn, $query);
+        $mejor_match = pg_fetch_assoc($res);
+        $suma_match = $mejor_match['ancho'] + $mejor_match['alto'];
 
-        if ($result && pg_num_rows($result) > 0) {
-            $resultado = pg_fetch_assoc($result);
-            echo "<div class='alert alert-success mt-4'>";
-            echo "<h5>Resultado encontrado:</h5>";
-            echo "<ul>";
-            echo "<li><strong>Ancho:</strong> {$resultado['ancho']} mm</li>";
-            echo "<li><strong>Alto:</strong> {$resultado['alto']} mm</li>";
-            echo "<li><strong>Área:</strong> {$resultado['area']} mm²</li>";
-            echo "<li><strong>Precio ($color):</strong> $" . number_format($resultado[$color], 2) . "</li>";
-            echo "</ul>";
-            echo "</div>";
-        } else {
-            echo "<div class='alert alert-warning mt-4'>No se encontró un valor cercano.</div>";
+        echo "<div class='alert alert-success mt-4'>";
+        echo "<h5>Resultado Encontrado:</h5>";
+        echo "<ul>";
+        echo "<li><strong>Ingresado:</strong> Ancho = {$ancho} mm, Alto = {$alto} mm</li>";
+        echo "<li><strong>Medida usada (más aproximada en alto):</strong> Ancho = {$mejor_match['ancho']} mm, Alto = <span class='fw-bold text-success'>{$mejor_match['alto']} mm</span></li>";
+        echo "<li><strong>Área:</strong> {$mejor_match['area']} mm²</li>";
+        echo "<li><strong>Precio ($color):</strong> $".number_format($mejor_match[$color], 2)."</li>";
+        echo "<li><strong>Suma de medidas ingresadas:</strong> {$suma_ingresada} mm</li>";
+        echo "<li><strong>Suma de medidas del match:</strong> {$suma_match} mm</li>";
+        echo "</ul>";
+        echo "</div>";
+
+        // Tabla de referencia
+        $todos = pg_query($conn, "SELECT * FROM precios_perfiles ORDER BY alto ASC");
+        echo "<h5 class='mt-5'>Lista de Medidas Disponibles</h5>";
+        echo "<table class='table table-bordered'><thead><tr>
+            <th>Ancho</th><th>Alto</th><th>Área</th>
+            <th>Natural</th><th>Básico</th><th>Especial</th>
+        </tr></thead><tbody>";
+        while ($fila = pg_fetch_assoc($todos)) {
+            $destacar = ($fila['alto'] == $mejor_match['alto']) ? "class='highlight'" : "";
+            echo "<tr $destacar>";
+            echo "<td>{$fila['ancho']}</td>";
+            echo "<td>{$fila['alto']}</td>";
+            echo "<td>{$fila['area']}</td>";
+            echo "<td>$" . number_format($fila['naturalc'], 2) . "</td>";
+            echo "<td>$" . number_format($fila['basico'], 2) . "</td>";
+            echo "<td>$" . number_format($fila['especial'], 2) . "</td>";
+            echo "</tr>";
         }
+        echo "</tbody></table>";
     }
 }
 ?>
