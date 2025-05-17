@@ -117,7 +117,7 @@ if ($todos && pg_num_rows($todos) > 0) {
 } else {
     echo "<div class='alert alert-warning mt-4'>No se pudieron recuperar las medidas desde la base de datos.</div>";
 }
-
+}
 ?>
 
 </body>
