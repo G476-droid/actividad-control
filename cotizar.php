@@ -133,10 +133,10 @@ $h = pg_query($conn, "SELECT requerimiento, fecha, productos, subtotal, iva, tot
           <tr class="fila-producto">
             <td class="codigo"><?= htmlspecialchars($row['codigo']) ?></td>
             <td class="descripcion"><?= htmlspecialchars($row['descripcion']) ?></td>
-            <td class="precio"><?= number_format($row['precio_usd'],2,'.','') ?></td>
+            <td class="precio"><?= number_format($row['precio_usd'],3,'.','') ?></td>
             <td><input type="number" class="form-control cantidad" value="1" min="0" onchange="calcularTotales()"></td>
             <td><input type="number" class="form-control descuento" value="0" min="0" max="100" onchange="calcularTotales()"></td>
-            <td class="valor">$<?= number_format($row['precio_usd'],2) ?></td>
+            <td class="valor">$<?= number_format($row['precio_usd'],3) ?></td>
           </tr>
         <?php endwhile; ?>
         </tbody>
