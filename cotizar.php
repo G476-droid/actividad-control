@@ -107,8 +107,6 @@ $h = pg_query($conn, "SELECT requerimiento, fecha, productos, subtotal, iva, tot
     <?php if (!empty($mensaje)) echo $mensaje; ?>
   <h3 class="mb-4 text-center">NOVOPAN</h3>
   <a href="productosn.php" class="btn btn-success mb-4">+ Crear Nueva Cotización</a>
-
-
   <?php if ($result && pg_num_rows($result) > 0): ?>
     <form method="POST" onsubmit="return calcularTotales()">
        <div class="row mb-3">
@@ -134,8 +132,9 @@ $h = pg_query($conn, "SELECT requerimiento, fecha, productos, subtotal, iva, tot
             <td class="codigo"><?= htmlspecialchars($row['codigo']) ?></td>
             <td class="producto"><?= htmlspecialchars($row['producto']) ?></td>
             <td class="precio"><?= number_format($row['precio_usd'],3,'.','') ?></td>
-            <td><input type="number" class="form-control cantidad" value="1" min="0" step="0.000" onchange="calcularTotales()"></td>
-            <td><input type="number" class="form-control descuento" value="0" min="0" step="0.000" max="100" onchange="calcularTotales()"></td>
+           <td class="text-center"><input type="number" class="form-control form-control-sm text-center cantidad"value="1" min="0" step="0.001" onchange="calcularTotales()" style="max-width: 80px;"></td>
+            <td class="text-center"><input type="number" class="form-control form-control-sm text-center descuento" value="0" min="0" step="0.001" max="100" onchange="calcularTotales()" style="max-width: 80px;"></td>
+
             <td class="valor">$<?= number_format($row['precio_usd'],3,'.','') ?></td>
           </tr>
         <?php endwhile; ?>
