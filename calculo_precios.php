@@ -89,33 +89,35 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
         }
 
         // Mostrar tabla
-        $todos = pg_query($conn, "SELECT * FROM precios_perfiles ORDER BY alto ASC, ancho ASC");
-        echo "<h5 class='mt-5'>Lista de Medidas Disponibles</h5>";
-        echo "<table class='table table-bordered'><thead><tr>
-            <th>Ancho</th><th>Alto</th><th>Área</th>
-            <th>Natural</th><th>Básico</th><th>Especial</th>
-        </tr></thead><tbody>";
-        while ($fila = pg_fetch_assoc($todos)) {
-            $destacar = "";
-            if (
-                isset($mejor_match) &&
-                $fila['ancho'] == $mejor_match['ancho'] &&
-                $fila['alto'] == $mejor_match['alto']
-            ) {
-                $destacar = "class='highlight'";
-            }
-            echo "<tr $destacar>";
-            echo "<td>{$fila['ancho']}</td>";
-            echo "<td>{$fila['alto']}</td>";
-            echo "<td>{$fila['area']}</td>";
-            echo "<td>$" . number_format($fila['naturalc'], 2) . "</td>";
-            echo "<td>$" . number_format($fila['basico'], 2) . "</td>";
-            echo "<td>$" . number_format($fila['especial'], 2) . "</td>";
-            echo "</tr>";
+       $todos = pg_query($conn, "SELECT * FROM precios_perfiles ORDER BY alto ASC");
+
+if ($todos && pg_num_rows($todos) > 0) {
+    echo "<h5 class='mt-5'>Lista de Medidas Disponibles</h5>";
+    echo "<table class='table table-bordered'><thead><tr>
+        <th>Ancho</th><th>Alto</th><th>Área</th>
+        <th>Natural</th><th>Básico</th><th>Especial</th>
+    </tr></thead><tbody>";
+    
+    while ($fila = pg_fetch_assoc($todos)) {
+        $destacar = "";
+        if ($fila['alto'] == $mejor_match['alto'] && $fila['ancho'] == $mejor_match['ancho']) {
+            $destacar = "class='highlight'";
         }
-        echo "</tbody></table>";
+        echo "<tr $destacar>";
+        echo "<td>{$fila['ancho']}</td>";
+        echo "<td>{$fila['alto']}</td>";
+        echo "<td>{$fila['area']}</td>";
+        echo "<td>$" . number_format($fila['naturalc'], 2) . "</td>";
+        echo "<td>$" . number_format($fila['basico'], 2) . "</td>";
+        echo "<td>$" . number_format($fila['especial'], 2) . "</td>";
+        echo "</tr>";
     }
+
+    echo "</tbody></table>";
+} else {
+    echo "<div class='alert alert-warning mt-4'>No se pudieron recuperar las medidas desde la base de datos.</div>";
 }
+
 ?>
 
 </body>
