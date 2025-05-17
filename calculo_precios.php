@@ -106,9 +106,13 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
         </tr></thead><tbody>";
         while ($fila = pg_fetch_assoc($todos)) {
             $destacar = "";
-            if ($fila['alto'] == $mejor_match['alto'] && $fila['ancho'] == $mejor_match['ancho']) {
-                $destacar = "class='highlight'";
-            }
+             if (
+        isset($mejor_match) &&
+        $fila['alto'] == $mejor_match['alto'] &&
+        $fila['ancho'] == $mejor_match['ancho']
+    ) {
+        $destacar = "class='highlight'";
+    }
             echo "<tr $destacar>";
             echo "<td>{$fila['ancho']}</td>";
             echo "<td>{$fila['alto']}</td>";
