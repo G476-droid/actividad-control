@@ -72,20 +72,20 @@ $h = pg_query($conn, "SELECT requerimiento, fecha, productos, subtotal, iva, tot
         const cantidad = parseFloat(fila.querySelector('.cantidad').value) || 0;
         const descuento = parseFloat(fila.querySelector('.descuento').value) || 0;
         const valor = (precio * cantidad) * (1 - descuento/100);
-        fila.querySelector('.valor').textContent = '$' + valor.toFixed(2);
+        fila.querySelector('.valor').textContent = '$' + valor.toFixed(3);
         subtotal += valor;
         productosArr.push({ codigo, descripcion, precio, cantidad, descuento, valor });
       });
       const iva = subtotal * 0.15;
       const total = subtotal + iva;
-      document.getElementById('subtotal').textContent = '$' + subtotal.toFixed(2);
-      document.getElementById('iva').textContent = '$' + iva.toFixed(2);
-      document.getElementById('total').textContent = '$' + total.toFixed(2);
-      document.getElementById('transferencia').textContent = '$' + total.toFixed(2);
+      document.getElementById('subtotal').textContent = '$' + subtotal.toFixed(3);
+      document.getElementById('iva').textContent = '$' + iva.toFixed(3);
+      document.getElementById('total').textContent = '$' + total.toFixed(3);
+      document.getElementById('transferencia').textContent = '$' + total.toFixed(3);
       document.getElementById('datos').value = JSON.stringify(productosArr);
-      document.getElementById('subtotal_input').value = subtotal.toFixed(2);
-      document.getElementById('iva_input').value = iva.toFixed(2);
-      document.getElementById('total_input').value = total.toFixed(2);
+      document.getElementById('subtotal_input').value = subtotal.toFixed(3);
+      document.getElementById('iva_input').value = iva.toFixed(3);
+      document.getElementById('total_input').value = total.toFixed(3);
       return true;
     }
 
