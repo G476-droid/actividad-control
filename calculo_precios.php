@@ -95,7 +95,9 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
         echo "<li><strong>Medidas de reajuste:</strong> Ancho = {$ancho_reajuste} mm, Alto = {$alto_reajuste} mm</li>";
         echo "</ul></div>";
 
-        // Mostrar tabla
+        }
+}
+// Mostrar tabla
         $todos = pg_query($conn, "SELECT * FROM precios_perfiles ORDER BY alto ASC");
         echo "<h5 class='mt-5'>Lista de Medidas Disponibles</h5>";
         echo "<table class='table table-bordered'><thead><tr>
@@ -117,9 +119,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
             echo "</tr>";
         }
         echo "</tbody></table>";
-    }
-}
-
+    
 ?>
 
 </body>
