@@ -132,7 +132,7 @@ $h = pg_query($conn, "SELECT requerimiento, fecha, productos, subtotal, iva, tot
         <?php while ($row = pg_fetch_assoc($result)): ?>
           <tr class="fila-producto">
             <td class="codigo"><?= htmlspecialchars($row['codigo']) ?></td>
-            <td class="descripcion"><?= htmlspecialchars($row['descripcion']) ?></td>
+            <td class="producto"><?= htmlspecialchars($row['producto']) ?></td>
             <td class="precio"><?= number_format($row['precio_usd'],3,'.','') ?></td>
             <td><input type="number" class="form-control cantidad" value="1" min="0" step="0.000" onchange="calcularTotales()"></td>
             <td><input type="number" class="form-control descuento" value="0" min="0" step="0.000" max="100" onchange="calcularTotales()"></td>
