@@ -71,7 +71,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
             LIMIT 1
         ";
 
-        $res = pg_query($conn, $query);
+        $res = pg_query_params($conn, $query);
         $mejor_match = pg_fetch_assoc($res);
 
         if ($mejor_match) {
