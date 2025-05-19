@@ -132,8 +132,8 @@ $h = pg_query($conn, "SELECT requerimiento, fecha, productos, subtotal, iva, tot
             <td class="codigo"><?= htmlspecialchars($row['codigo']) ?></td>
             <td class="producto"><?= htmlspecialchars($row['producto']) ?></td>
             <td class="precio"><?= number_format($row['precio_usd'],3,'.','') ?></td>
-           <td class="text-center"><input type="number" class="form-control form-control-sm text-center cantidad"value="1" min="0" step="0.001" onchange="calcularTotales()" style="max-width: 80px;"></td>
-            <td class="text-center"><input type="number" class="form-control form-control-sm text-center descuento" value="0" min="0" step="0.001" max="100" onchange="calcularTotales()" style="max-width: 80px;"></td>
+           <td class="text-center"><input type="number" class="form-control form-control-sm text-center cantidad"value="1" min="0" step="1" onchange="calcularTotales()" style="max-width: 80px;"></td>
+            <td class="text-center"><input type="number" class="form-control form-control-sm text-center descuento" value="0" min="0" step="1" max="100" onchange="calcularTotales()" style="max-width: 80px;"></td>
 
             <td class="valor">$<?= number_format($row['precio_usd'],3,'.','') ?></td>
           </tr>
