@@ -72,16 +72,19 @@ $h = pg_query($conn, "SELECT requerimiento, fecha, productos, subtotal, iva, tot
         const cantidad = parseFloat(fila.querySelector('.cantidad').value) || 0;
         const descuento = parseFloat(fila.querySelector('.descuento').value) || 0;
         const valor = (precio * cantidad) * (1 - descuento/100);
+        const favr = parseFloat(fila.querySelector('.favr').value) || 0;
         fila.querySelector('.valor').textContent = '$' + valor.toFixed(3);
         subtotal += valor;
         productosArr.push({ codigo, descripcion, precio, cantidad, descuento, valor });
       });
       const iva = subtotal * 0.15;
       const total = subtotal + iva;
+      const fav = total + favor;
       document.getElementById('subtotal').textContent = '$' + subtotal.toFixed(3);
       document.getElementById('iva').textContent = '$' + iva.toFixed(3);
       document.getElementById('total').textContent = '$' + total.toFixed(3);
       document.getElementById('transferencia').textContent = '$' + total.toFixed(3);
+      document.getElementById('favor').textContent = '$' + fav.toFixed(3);
       document.getElementById('datos').value = JSON.stringify(productosArr);
       document.getElementById('subtotal_input').value = subtotal.toFixed(3);
       document.getElementById('iva_input').value = iva.toFixed(3);
@@ -150,6 +153,7 @@ $h = pg_query($conn, "SELECT requerimiento, fecha, productos, subtotal, iva, tot
           </table>
         </div>
       </div>
+      <h5><strong>VALOR :</strong> <span id="favor">$0.00</span></h5>
       <h5><strong>MONTO TRANSFERENCIA:</strong> <span id="transferencia">$0.00</span></h5>
       <input type="hidden" name="datos" id="datos">
       <input type="hidden" name="subtotal" id="subtotal_input">
