@@ -77,7 +77,8 @@ $h = pg_query($conn, "SELECT requerimiento, fecha, productos, subtotal, iva, tot
         productosArr.push({ codigo, descripcion, precio, cantidad, descuento, valor });
       });
       const iva = subtotal * 0.15;
-      const total = subtotal + iva;
+      const favor = parseFloat(document.getElementById('adicional').value) || 0;
+      const total = (subtotal + iva)+favor;
       document.getElementById('subtotal').textContent = '$' + subtotal.toFixed(3);
       document.getElementById('iva').textContent = '$' + iva.toFixed(3);
       document.getElementById('total').textContent = '$' + total.toFixed(3);
