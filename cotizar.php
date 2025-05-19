@@ -157,6 +157,7 @@ $h = pg_query($conn, "SELECT requerimiento, fecha, productos, subtotal, iva, tot
       <input type="hidden" name="total" id="total_input">
       <input type="hidden" name="aprobar" value="1">
       <div class="text-center">
+        <a href="productosn.php" class="btn btn-secondary mt-3">Cancelar</a>
         <button type="submit" class="btn btn-success mt-3">Aprobar Cotización</button>
       </div>
     </form>
