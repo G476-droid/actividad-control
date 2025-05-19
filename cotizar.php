@@ -153,7 +153,10 @@ $h = pg_query($conn, "SELECT requerimiento, fecha, productos, subtotal, iva, tot
           </table>
         </div>
       </div>
-      <h5><strong>VALOR :</strong> <span id="favor">$0.00</span></h5>
+      <h5><strong>VALOR :</strong> 
+  <input type="text" id="favor" name="favor" class="form-control d-inline-block" style="width: 150px;" placeholder="$0.00">
+</h5>
+
       <h5><strong>MONTO TRANSFERENCIA:</strong> <span id="transferencia">$0.00</span></h5>
       <input type="hidden" name="datos" id="datos">
       <input type="hidden" name="subtotal" id="subtotal_input">
