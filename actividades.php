@@ -21,13 +21,14 @@ if ($es_admin) {
     FROM actividades 
     JOIN personas ON personas.id = actividades.persona_id 
     WHERE borrado = FALSE AND completada = FALSE
-    ORDER BY 
-      CASE prioridad 
-        WHEN 'alta' THEN 1 
-        WHEN 'media' THEN 2 
-        WHEN 'baja' THEN 3 
-        ELSE 4 
-      END, fecha ASC";
+   ORDER BY nombre_persona ASC,
+  CASE prioridad 
+    WHEN 'alta' THEN 1 
+    WHEN 'media' THEN 2 
+    WHEN 'baja' THEN 3 
+    ELSE 4 
+  END,
+  fecha ASC";
   $result = pg_query($conn, $query);
 } else {
   $persona_sql = pg_query_params($conn, "SELECT nombre FROM personas WHERE id = $1", array($persona_id));
